@@ -3,9 +3,53 @@
 {% block title %}New Sortie{% endblock %}
 
 {% block body %}
-    <h1>Créer une sortie</h1>
+    <div class="text-center symfony-form">
+        <h1>Créer une sortie</h1>
 
-    {{ include('sortie/_form.html.twig') }}
+        {{ form_start(form) }}
 
-    <a href="{{ path('sortie_index') }}">back to list</a>
+        <!-- Formulaire -->
+        <div class="row">
+            <!-- Col 1 -->
+            <div class="col">
+            
+                <label>Nom de la sortie : </label>
+                {{ form_widget(form.nom) }} <br/>
+
+                <label>Date de la sortie : </label>
+                {{ form_widget(form.dateDebut) }} <br/>
+
+                <label>Date limite d'inscription : </label>
+                {{ form_widget(form.dateCloture) }} <br/>
+
+                <label>Nombre de places : </label>
+                {{ form_widget(form.nbInscriptionsMax) }} <br/>
+
+                <label>Durée : </label>
+                {{ form_widget(form.duree) }} <br/>
+
+                <label>Image mis en avant : </label>
+                {{ form_widget(form.urlPhoto) }} <br/>
+
+                <label>Description et infos : </label>
+                {{ form_widget(form.descriptionInfos) }} <br/>
+
+            </div>
+            <!-- Col 2 -->
+            <div class="col">
+
+                <label>Lieu : </label>
+                {{ form_widget(form.lieu) }} <br/>
+
+            </div>
+        </div>
+
+        <!-- Controles -->
+        <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
+        <button class="btn btn-dark" style="border-radius:25px;">Publier la sortie</button>
+        <button class="btn btn-danger" style="border-radius:25px;">Annuler</button>
+
+        {{ form_end(form) }}
+            
+    </div>
 {% endblock %}
