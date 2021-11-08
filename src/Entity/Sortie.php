@@ -70,6 +70,12 @@ class Sortie
      */
     private $estInscrit;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Etat::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $etat;
+
     public function __construct()
     {
         $this->estInscrit = new ArrayCollection();
@@ -208,6 +214,18 @@ class Sortie
     public function removeEstInscrit(Participant $estInscrit): self
     {
         $this->estInscrit->removeElement($estInscrit);
+
+        return $this;
+    }
+
+    public function getEtat(): ?Etat
+    {
+        return $this->etat;
+    }
+
+    public function setEtat(?Etat $etat): self
+    {
+        $this->etat = $etat;
 
         return $this;
     }
