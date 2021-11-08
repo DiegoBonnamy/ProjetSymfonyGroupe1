@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -19,7 +20,12 @@ class SortieType extends AbstractType
             ->add('nbInscriptionsMax')
             ->add('descriptionInfos')
             ->add('urlPhoto')
-        ;
+            ->add('lieu', null, [
+                'label' => 'Nom ville',
+                'multiple' => false,
+                'mapped' => false,
+            ]);;
+
     }
 
     public function configureOptions(OptionsResolver $resolver)

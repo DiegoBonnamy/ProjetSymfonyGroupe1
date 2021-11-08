@@ -57,7 +57,7 @@ class Sortie
     /**
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
      */
-    private $lieux;
+    private $lieu;
 
     /**
      * @ORM\ManyToOne(targetEntity=Participant::class)
@@ -170,14 +170,14 @@ class Sortie
         return $this;
     }
 
-    public function getLieux(): ?Lieu
+    public function getLieu(): ?Lieu
     {
-        return $this->lieux;
+        return $this->lieu;
     }
 
-    public function setLieux(?Lieu $lieux): self
+    public function setLieu(?Lieu $lieu): self
     {
-        $this->lieux = $lieux;
+        $this->lieu = $lieu;
 
         return $this;
     }
