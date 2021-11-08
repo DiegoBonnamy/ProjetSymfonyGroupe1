@@ -20,11 +20,13 @@ class SortieType extends AbstractType
             ->add('nbInscriptionsMax')
             ->add('descriptionInfos')
             ->add('urlPhoto')
-            ->add('lieu', null, [
-                'label' => 'Nom ville',
-                'multiple' => false,
+            ->add('lieu', LieuType::class, [
+                'class' => 'App\Entity\Lieu',
                 'mapped' => false,
-            ]);;
+                'label' => 'nom',
+                'placeholder' => 'Selectionner un lieu',
+                'required' => false
+            ]);
 
     }
 

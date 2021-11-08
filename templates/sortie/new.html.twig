@@ -12,7 +12,7 @@
         <div class="row">
             <!-- Col 1 -->
             <div class="col">
-            
+
                 <label>Nom de la sortie : </label>
                 {{ form_widget(form.nom) }} <br/>
 
@@ -38,6 +38,13 @@
             <!-- Col 2 -->
             <div class="col">
 
+                <label>Ville : </label>
+                <select name="ville-select">
+                    {% for ville in villes %}
+                        <option>{{ ville.nom }}</option>
+                    {% endfor %}
+                </select>
+
                 <label>Lieu : </label>
                 {{ form_widget(form.lieu) }} <br/>
 
@@ -50,6 +57,6 @@
         <button class="btn btn-danger" style="border-radius:25px;">Annuler</button>
 
         {{ form_end(form) }}
-            
+
     </div>
 {% endblock %}
