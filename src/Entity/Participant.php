@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\ParticipantRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -62,6 +64,16 @@ class Participant implements UserInterface
      * @ORM\Column(type="integer")
      */
     private $sites_no_site;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="estInscrit")
+     */
+    private $estInscrit;
+
+    public function __construct()
+    {
+        $this->estInscrit = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -243,6 +255,33 @@ class Participant implements UserInterface
     public function setName(string $name): self
     {
         $this->name = $name;
+        return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getEstInscrit(): Collection
+    {
+        return $this->estInscrit;
+    }
+
+    public function addEstInscrit(Sortie $estInscrit): self
+    {
+        if (!$this->estInscrit->contains($estInscrit)) {
+            $this->estInscrit[] = $estInscrit;
+            $estInscrit->addEstInscrit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEstInscrit(Sortie $estInscrit): self
+    {
+        if ($this->estInscrit->removeElement($estInscrit)) {
+            $estInscrit->removeEstInscrit($this);
+        }
+
         return $this;
     }
 }

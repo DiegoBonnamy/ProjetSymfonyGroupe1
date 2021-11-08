@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SortieRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -56,6 +58,22 @@ class Sortie
      * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
      */
     private $lieux;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Participant::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $organisateur;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="estInscrit")
+     */
+    private $estInscrit;
+
+    public function __construct()
+    {
+        $this->estInscrit = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -154,6 +172,42 @@ class Sortie
     public function setLieux(?Lieu $lieux): self
     {
         $this->lieux = $lieux;
+
+        return $this;
+    }
+
+    public function getOrganisateur(): ?Participant
+    {
+        return $this->organisateur;
+    }
+
+    public function setOrganisateur(?Participant $organisateur): self
+    {
+        $this->organisateur = $organisateur;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participant[]
+     */
+    public function getEstInscrit(): Collection
+    {
+        return $this->estInscrit;
+    }
+
+    public function addEstInscrit(Participant $estInscrit): self
+    {
+        if (!$this->estInscrit->contains($estInscrit)) {
+            $this->estInscrit[] = $estInscrit;
+        }
+
+        return $this;
+    }
+
+    public function removeEstInscrit(Participant $estInscrit): self
+    {
+        $this->estInscrit->removeElement($estInscrit);
 
         return $this;
     }
