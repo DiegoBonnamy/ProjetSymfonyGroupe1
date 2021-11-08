@@ -52,6 +52,11 @@ class Sortie
      */
     private $urlPhoto;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Lieu::class, inversedBy="sorties")
+     */
+    private $lieux;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +142,18 @@ class Sortie
     public function setUrlPhoto(?string $urlPhoto): self
     {
         $this->urlPhoto = $urlPhoto;
+
+        return $this;
+    }
+
+    public function getLieux(): ?Lieu
+    {
+        return $this->lieux;
+    }
+
+    public function setLieux(?Lieu $lieux): self
+    {
+        $this->lieux = $lieux;
 
         return $this;
     }
