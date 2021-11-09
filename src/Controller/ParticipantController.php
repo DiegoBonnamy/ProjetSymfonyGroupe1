@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * @Route("/participant")
@@ -28,22 +29,30 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/new", name="participant_new", methods={"GET","POST"})
      */
-    public function new(Request $request): Response
+    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $participant = new Participant();
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $user = new Participant();
+        $form = $this->createForm(ParticipantType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // encode the plain password
+            $user->setMotDePasse(
+                $passwordEncoder->encodePassword(
+                    $user,
+                    $form->get('plainPassword')->getData()
+                )
+            );
+
             $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($participant);
+            $entityManager->persist($user);
             $entityManager->flush();
 
             return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('participant/new.html.twig', [
-            'participant' => $participant,
+            'participant' => $user,
             'form' => $form,
         ]);
     }
