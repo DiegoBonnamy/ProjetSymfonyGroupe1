@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\SortieType;
@@ -104,5 +105,17 @@ class SortieController extends AbstractController
         );
 
         return $this->json($lieux);
+    }
+
+    /**
+     * @Route("/api/lieux/{id}", name="api_lieux" ,methods={"GET"})
+     */
+    public function api_lieux(Lieu $lieu, SortieRepository $repo): Response
+    {
+        $unLieu = $repo->findOneBy(
+            ['lieu' => $lieu->getId()]
+        );
+
+        return $this->json($lieu);
     }
 }
