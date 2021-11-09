@@ -38,26 +38,18 @@
             <!-- Col 2 -->
             <div class="col">
 
-                {% for ville in villes %}
-                    <label>Ville : </label><br/>
-                    <select name="ville-select" id="ville-select">
-                        <option>{{ ville.nom }}</option>
-                    </select><br/>
+                <label>Ville : </label><br/>
+                <select name="villes" id="villes" onchange="callApi()">
+                    {% for ville in villes %}
+                        <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                    {% endfor %}
+                </select>
+                <br/>
 
-                    <br/>
-                    <label>Lieu : </label><br/>
-                    <select name="lieu-select" id="lieu-select">
-                        {% for lieu in ville.lieux %}
-                            <option>{{ lieu.nom }}</option>
-                        {% endfor %}
-                    </select><br/><br/>
-                {% endfor %}
-
-                <label>Nom :</label>
-                {{ lieu.nom }}
-
-                <label>Rue :</label>
-                {{ lieu.rue }}
+                <br/>
+                <label>Lieu : </label><br/>
+                <select name="lieux" id="lieux"></select>
+                <br/><br/>
 
                 {{ form_widget(form.lieu) }} <br/>
             </div>
@@ -72,36 +64,35 @@
 
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
-        <script>
-            callApi();
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        callApi();
 
-            function callApi() {
-            var couleur_select = document.getElementById("couleurs");
-            var fruit_select = document.getElementById("cocktail_Fruit");
-            var couleur_id = couleur_select.value;
+        function callApi() {
+            var villes_select = document.getElementById("villes");
+            var lieux_select = document.getElementById("lieux");
+            var ville_id = villes_select.value;
 
+            alert("axios");
 
-
-            let url= 'http://localhost/symfony/cocktail/public/api/couleurs/' + couleur_id;
+            let url= '{{ app.request.getBaseURL() }}/sortie/api/villes/' + ville_id;
             axios.get(url).then( response => {
-// Clear
-            var i, L = couleur_select.options.length - 1;
-            for(i = L; i >= 0; i--) {
-            fruit_select.remove(i);
-        }
+                // Clear
+                var i, L = villes_select.options.length - 1;
+                for(i = L; i >= 0; i--) {
+                    lieux_select.remove(i);
+                }
 
-
-
-// Fill
-            let tableau = response.data;
-            for( let fruit of tableau){
-            var element = document.createElement("option");
-            element.textContent = fruit.nom;
-            element.value = fruit.id;
-            fruit_select.appendChild(element);
-        }
-        });
+                // Fill
+                let tableau = response.data;
+                for(let lieu of tableau){
+                    alert("ok" + lieu);
+                    var element = document.createElement("option");
+                    element.textContent = lieu.nom;
+                    element.value = lieu.id;
+                    lieux_select.appendChild(element);
+                }
+            });
         }
     </script>
 {% endblock %}
