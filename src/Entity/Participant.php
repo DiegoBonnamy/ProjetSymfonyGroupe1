@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
@@ -224,7 +225,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return (string) $this->mot_de_passe;
     }
 
-    public function setPassword(string $password): self
+    public function setPassword(UserPasswordHasherInterface $passwordHasher, string $password): self
     {
         $hashedPassword = $passwordHasher->hashPassword(
             $this,
