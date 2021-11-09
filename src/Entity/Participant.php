@@ -11,7 +11,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
  */
-class Participant implements UserInterface
+class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
     /**
      * @ORM\Id
@@ -46,7 +46,7 @@ class Participant implements UserInterface
     private $mail;
 
     /**
-     * @ORM\Column(type="string", length=50)
+     * @ORM\Column(type="string", length=255)
      */
     private $mot_de_passe;
 
@@ -196,7 +196,7 @@ class Participant implements UserInterface
      */
     public function getUsername(): string
     {
-        return (string) $this->email;
+        return (string) $this->pseudo;
     }
 
     /**
@@ -221,12 +221,16 @@ class Participant implements UserInterface
      */
     public function getPassword(): string
     {
-        return (string) $this->password;
+        return (string) $this->mot_de_passe;
     }
 
     public function setPassword(string $password): self
     {
-        $this->password = $password;
+        $hashedPassword = $passwordHasher->hashPassword(
+            $this,
+            $password
+        );
+        $this->mot_de_passe = $hashedPassword;
         return $this;
     }
 
@@ -249,12 +253,12 @@ class Participant implements UserInterface
 
     public function getName(): ?string
     {
-        return $this->name;
+        return $this->nom;
     }
 
     public function setName(string $name): self
     {
-        $this->name = $name;
+        $this->nom = $name;
         return $this;
     }
 

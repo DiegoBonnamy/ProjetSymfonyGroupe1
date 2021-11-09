@@ -93,4 +93,16 @@ class SortieController extends AbstractController
 
         return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    /**
+     * @Route("/api/villes/{id}", name="api_villes" ,methods={"GET"})
+     */
+    public function api_couleurs(Ville $ville, LieuRepository $repo): Response
+    {
+        $lieux = $repo->findBy(
+            ['ville' => $ville->getId()]
+        );
+
+        return $this->json($lieux);
+    }
 }
