@@ -3,45 +3,108 @@
 {% block title %}Sortie index{% endblock %}
 
 {% block body %}
-    <h1>Sortie index</h1>
+    <div class="text-center symfony-index">
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom</th>
-                <th>DateDebut</th>
-                <th>Duree</th>
-                <th>DateCloture</th>
-                <th>NbInscriptionsMax</th>
-                <th>DescriptionInfos</th>
-                <th>UrlPhoto</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for sortie in sorties %}
-            <tr>
-                <td>{{ sortie.id }}</td>
-                <td>{{ sortie.nom }}</td>
-                <td>{{ sortie.dateDebut ? sortie.dateDebut|date('Y-m-d') : '' }}</td>
-                <td>{{ sortie.duree }}</td>
-                <td>{{ sortie.dateCloture ? sortie.dateCloture|date('Y-m-d') : '' }}</td>
-                <td>{{ sortie.nbInscriptionsMax }}</td>
-                <td>{{ sortie.descriptionInfos }}</td>
-                <td>{{ sortie.urlPhoto }}</td>
-                <td>
-                    <a href="{{ path('sortie_show', {'id': sortie.id}) }}">show</a>
-                    <a href="{{ path('sortie_edit', {'id': sortie.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="9">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+        <!-- Date + Nom -->
+        <div class="row">
+            <div class="col" style="text-align:right;">
+                <h5><b>Date du jour : 19/07/2018</b></h5>
+                <h5><b>Participant : Jeanine L.</b></h5>
+            </div>
+        </div>
 
-    <a href="{{ path('sortie_new') }}">Create new</a>
+
+        <!-- Filtre -->
+        <div class="row symfony-block" style="margin-top:45px;">
+
+            <div class="col" style="text-align:left;">
+                <h6><b>Filtrer les sorties : </b></h6>
+                <br/>
+
+                <label>Site : </label>
+                <select>
+                    <option>Saint Herblain</option>
+                </select>
+                <br/><br/>
+
+                <label>Le nom de la sortie contient : </label>
+                <input type="text" placeholder="search" />
+                <br/><br/>
+
+                <div class="row">
+                    <div class="col">
+                        <label>Entre : </label>
+                        <input type="date" />
+                    </div>
+                    <div class="col">
+                        <label> et : </label>
+                        <input type="date" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="col" style="text-align:left;">
+                <input type="checkbox" id="check1" name="check1" checked>
+                <label for="check1">Sorties dont je suis l'organisateur</label>
+                <br/><br/>
+
+                <input type="checkbox" id="check2" name="check2" checked>
+                <label for="check2">Sorties auxquelles je suis inscrit</label>
+                <br/><br/>
+
+                <input type="checkbox" id="check3" name="check3" checked>
+                <label for="check3">Sorties auxquelles je ne suis pas inscrit</label>
+                <br/><br/>
+
+                <input type="checkbox" id="check4" name="check4" checked>
+                <label for="check4">Sorties passées</label>
+            </div>
+
+            <div class="col">
+                <button class="btn btn-lg btn-black text-white" style="border-radius:25px;margin-top:15%;">Rechercher</button>
+            </div>
+
+
+        </div>
+
+
+        <!-- Tableau résultats -->
+        <div class="row" style="margin-top:45px;">
+            <div class="col">
+                <table class="table table-striped bg-white">
+                    <thead>
+                        <tr>
+                            <th>Nom de la sortie</th>
+                            <th>Date de la sortie</th>
+                            <th>Clôture</th>
+                            <th>Inscrits / Places</th>
+                            <th>Etat</th>
+                            <th>Inscrit</th>
+                            <th>Organisateur</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Philo</td>
+                            <td>19/07/2018 23:45</td>
+                            <td>19/07/2018</td>
+                            <td>6 / 8</td>
+                            <td>Ouvert</td>
+                            <td>X</td>
+                            <td>Spinoz A.</td>
+                            <td>Afficher - S'inscrire</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col" style="text-align:left;">
+                <button class="btn btn-black text-white text-center" style="border-radius:25px;">Créer une sortie</button>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
