@@ -8,7 +8,7 @@
         <!-- Date + Nom -->
         <div class="row">
             <div class="col" style="text-align:right;">
-                <h5><b>Date du jour : 19/07/2018</b></h5>
+                <h5><b>Date du jour : {{ "now"|date("d/m/Y") }}</b></h5>
                 <h5><b>Participant : Jeanine L.</b></h5>
             </div>
         </div>
@@ -85,16 +85,20 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>Philo</td>
-                            <td>19/07/2018 23:45</td>
-                            <td>19/07/2018</td>
-                            <td>6 / 8</td>
-                            <td>Ouvert</td>
-                            <td>X</td>
-                            <td>Spinoz A.</td>
-                            <td>Afficher - S'inscrire</td>
-                        </tr>
+                        {% for sortie in sorties %}
+                            <tr>
+                                <td>{{ sortie.nom }}</td>
+                                <td>{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
+                                <td>{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
+                                <td>x / {{ sortie.nbInscriptionsMax }}</td>
+                                <td>{{ sortie.etat.libelle }}</td>
+                                <td>X</td>
+                                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
+                                <td>
+                                    <a class="text-dark">Afficher</a> - <a class="text-dark">S'inscrire</a>
+                                </td>
+                            </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

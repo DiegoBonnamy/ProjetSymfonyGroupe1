@@ -37,7 +37,7 @@ class ParticipantAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($pseudo),
-            new PasswordCredentials($request->request->get('mot_de_passe', '')),
+            new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
             ]
@@ -51,12 +51,18 @@ class ParticipantAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        //return new RedirectResponse($this->urlGenerator->generate('some_route'));
-        throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        return new RedirectResponse($this->urlGenerator->generate('sortie_index'));
+        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
+    }
+
+    public function supports(Request $request) : bool 
+    { 
+        return self::LOGIN_ROUTE === $request->attributes->get('_route') 
+        && $request->isMethod('POST'); 
     }
 }
