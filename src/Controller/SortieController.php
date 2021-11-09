@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Sortie;
+use App\Entity\Ville;
 use App\Form\SortieType;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
+use App\Repository\LieuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -97,7 +99,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/api/villes/{id}", name="api_villes" ,methods={"GET"})
      */
-    public function api_couleurs(Ville $ville, LieuRepository $repo): Response
+    public function api_villes(Ville $ville, LieuRepository $repo): Response
     {
         $lieux = $repo->findBy(
             ['ville' => $ville->getId()]

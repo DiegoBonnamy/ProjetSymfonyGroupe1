@@ -29,11 +29,6 @@ class Ville
      */
     private $codePostal;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Lieu::class, mappedBy="ville")
-     */
-    private $lieux;
-
     public function __construct()
     {
         $this->lieux = new ArrayCollection();
@@ -64,36 +59,6 @@ class Ville
     public function setCodePostal(string $codePostal): self
     {
         $this->codePostal = $codePostal;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Lieu[]
-     */
-    public function getLieux(): Collection
-    {
-        return $this->lieux;
-    }
-
-    public function addLieux(Lieu $lieux): self
-    {
-        if (!$this->lieux->contains($lieux)) {
-            $this->lieux[] = $lieux;
-            $lieux->setVille($this);
-        }
-
-        return $this;
-    }
-
-    public function removeLieux(Lieu $lieux): self
-    {
-        if ($this->lieux->removeElement($lieux)) {
-            // set the owning side to null (unless already changed)
-            if ($lieux->getVille() === $this) {
-                $lieux->setVille(null);
-            }
-        }
 
         return $this;
     }
