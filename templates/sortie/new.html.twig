@@ -73,7 +73,6 @@
             var lieux_select = document.getElementById("lieux");
             var ville_id = villes_select.value;
 
-            alert("axios");
 
             let url= '{{ app.request.getBaseURL() }}/sortie/api/villes/' + ville_id;
             axios.get(url).then( response => {
@@ -86,7 +85,6 @@
                 // Fill
                 let tableau = response.data;
                 for(let lieu of tableau){
-                    alert("ok" + lieu);
                     var element = document.createElement("option");
                     element.textContent = lieu.nom;
                     element.value = lieu.id;
