@@ -38,16 +38,28 @@
             <!-- Col 2 -->
             <div class="col">
 
-                <label>Ville : </label>
-                <select name="ville-select">
-                    {% for ville in villes %}
+                {% for ville in villes %}
+                    <label>Ville : </label><br/>
+                    <select name="ville-select" id="ville-select">
                         <option>{{ ville.nom }}</option>
-                    {% endfor %}
-                </select>
+                    </select><br/>
 
-                <label>Lieu : </label>
+                    <br/>
+                    <label>Lieu : </label><br/>
+                    <select name="lieu-select" id="lieu-select">
+                        {% for lieu in ville.lieux %}
+                            <option>{{ lieu.nom }}</option>
+                        {% endfor %}
+                    </select><br/><br/>
+                {% endfor %}
+
+                <label>Nom :</label>
+                {{ lieu.nom }}
+
+                <label>Rue :</label>
+                {{ lieu.rue }}
+
                 {{ form_widget(form.lieu) }} <br/>
-
             </div>
         </div>
 
@@ -59,4 +71,37 @@
         {{ form_end(form) }}
 
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js">
+        <script>
+            callApi();
+
+            function callApi() {
+            var couleur_select = document.getElementById("couleurs");
+            var fruit_select = document.getElementById("cocktail_Fruit");
+            var couleur_id = couleur_select.value;
+
+
+
+            let url= 'http://localhost/symfony/cocktail/public/api/couleurs/' + couleur_id;
+            axios.get(url).then( response => {
+// Clear
+            var i, L = couleur_select.options.length - 1;
+            for(i = L; i >= 0; i--) {
+            fruit_select.remove(i);
+        }
+
+
+
+// Fill
+            let tableau = response.data;
+            for( let fruit of tableau){
+            var element = document.createElement("option");
+            element.textContent = fruit.nom;
+            element.value = fruit.id;
+            fruit_select.appendChild(element);
+        }
+        });
+        }
+    </script>
 {% endblock %}
