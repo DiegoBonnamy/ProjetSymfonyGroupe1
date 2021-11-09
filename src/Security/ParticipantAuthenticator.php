@@ -37,7 +37,7 @@ class ParticipantAuthenticator extends AbstractLoginFormAuthenticator
 
         return new Passport(
             new UserBadge($pseudo),
-            new PasswordCredentials($request->request->get('password', '')),
+            new PasswordCredentials($request->request->get('mot_de_passe', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
             ]
