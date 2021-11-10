@@ -103,6 +103,10 @@
                                                 <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}" class="text-dark"> S'inscrire </a>
                                             {% endif %}
                                         {% endif %}
+                                    {% else %}
+                                        {% if sortie.etat.libelle == "Ouvert" %}
+                                            <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}" class="text-dark"> Annuler </a>
+                                        {% endif %}
                                     {% endif %}
                                 </td>
                             </tr>

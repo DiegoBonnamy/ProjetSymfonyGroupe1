@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sortie{% endblock %}
+
+{% block body %}
+    <div class="symfony-form text-center">
+        <h1>Annuler une sortie</h1>
+
+        <form>
+            <p> Nom de la sortie : {{ sortie.nom }} </p>
+
+            <p> Date de la sortie : {{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }} </p>
+
+            <p> Ville organnisatrice : {{ sortie.lieu.ville.nom }} </p>
+
+            <p> Lieu : {{ sortie.lieu.nom }} </p>
+
+            <label for="motif">Motif : </label><br/>
+            <textarea id="motif" name="motif" rows="5" cols="33"></textarea><br/>
+            <br/>
+
+            <button class="btn btn-danger" style="border-radius:25px;">Annuler la sortie</button>
+            <a href="{{ path('sortie_index') }}" class="btn btn-dark text-white" style="border-radius:25px;">Retour</a>
+        </form>
+
+    </div>
+{% endblock %}
