@@ -66,10 +66,15 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $actif;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Sortie::class, inversedBy="participants")
+     */
+    private $estInscrit;
+
 
     public function __construct()
     {
-
+        $this->estInscrit = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -221,5 +226,40 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         $this->actif = $actif;
 
         return $this;
+    }
+
+    /**
+     * @return Collection|Sortie[]
+     */
+    public function getEstInscrit(): Collection
+    {
+        return $this->estInscrit;
+    }
+
+    public function addEstInscrit(Sortie $estInscrit): self
+    {
+        if (!$this->estInscrit->contains($estInscrit)) {
+            $this->estInscrit[] = $estInscrit;
+        }
+
+        return $this;
+    }
+
+    public function removeEstInscrit(Sortie $estInscrit): self
+    {
+        $this->estInscrit->removeElement($estInscrit);
+
+        return $this;
+    }
+
+    public function testEstInscrit(Sortie $sortie): bool
+    {
+        foreach($sortie->getParticipants() as $participant){
+            if($participant->getId() == $this->getId()){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

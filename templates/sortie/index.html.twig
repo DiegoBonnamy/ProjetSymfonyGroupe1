@@ -95,7 +95,15 @@
                                 <td>X</td>
                                 <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
                                 <td>
-                                    <a class="text-dark">Afficher</a> - <a class="text-dark">S'inscrire</a>
+                                    {% if sortie.organisateur.id != app.user.id %}
+                                        {% if sortie.etat.libelle == "Ouvert" %}
+                                            {% if app.user in sortie.participants %}
+                                                <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}" class="text-dark"> Se désinscrire </a>
+                                            {% else %}
+                                                <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}" class="text-dark"> S'inscrire </a>
+                                            {% endif %}
+                                        {% endif %}
+                                    {% endif %}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -106,7 +114,7 @@
 
         <div class="row">
             <div class="col" style="text-align:left;">
-                <button class="btn btn-black text-white text-center" style="border-radius:25px;">Créer une sortie</button>
+                <a href="{{ path('sortie_new') }}" class="btn btn-black text-white text-center" style="border-radius:25px;">Créer une sortie</a>
             </div>
         </div>
 

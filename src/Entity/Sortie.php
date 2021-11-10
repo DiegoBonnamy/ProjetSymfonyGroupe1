@@ -66,19 +66,20 @@ class Sortie
     private $organisateur;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Participant::class, inversedBy="estInscrit")
-     */
-    private $estInscrit;
-
-    /**
      * @ORM\ManyToOne(targetEntity=Etat::class)
      * @ORM\JoinColumn(nullable=false)
      */
     private $etat;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Participant::class, mappedBy="estInscrit")
+     */
+    private $participants;
+
     public function __construct()
     {
         $this->estInscrit = new ArrayCollection();
+        $this->participants = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -194,30 +195,6 @@ class Sortie
         return $this;
     }
 
-    /**
-     * @return Collection|Participant[]
-     */
-    public function getEstInscrit(): Collection
-    {
-        return $this->estInscrit;
-    }
-
-    public function addEstInscrit(Participant $estInscrit): self
-    {
-        if (!$this->estInscrit->contains($estInscrit)) {
-            $this->estInscrit[] = $estInscrit;
-        }
-
-        return $this;
-    }
-
-    public function removeEstInscrit(Participant $estInscrit): self
-    {
-        $this->estInscrit->removeElement($estInscrit);
-
-        return $this;
-    }
-
     public function getEtat(): ?Etat
     {
         return $this->etat;
@@ -226,6 +203,33 @@ class Sortie
     public function setEtat(?Etat $etat): self
     {
         $this->etat = $etat;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Participant[]
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
+    }
+
+    public function addParticipant(Participant $participant): self
+    {
+        if (!$this->participants->contains($participant)) {
+            $this->participants[] = $participant;
+            $participant->addEstInscrit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeParticipant(Participant $participant): self
+    {
+        if ($this->participants->removeElement($participant)) {
+            $participant->removeEstInscrit($this);
+        }
 
         return $this;
     }

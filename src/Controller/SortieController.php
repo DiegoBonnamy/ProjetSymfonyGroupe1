@@ -62,6 +62,40 @@ class SortieController extends AbstractController
     }
 
     /**
+     * @Route("/register/{id}", name="sortie_register", methods={"GET"})
+     */
+    public function register(Sortie $sortie): Response
+    {
+        $participant = $this->getUser();
+        if($participant->getId() != $sortie->getOrganisateur()->getId()){
+            $sortie->addParticipant($participant);
+            $participant->addEstInscrit($sortie);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($sortie);
+            $entityManager->persist($participant);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('sortie_index');
+    }
+
+    /**
+     * @Route("/unsubscribe/{id}", name="sortie_unsubscribe", methods={"GET"})
+     */
+    public function unsubscribe(Sortie $sortie): Response
+    {
+        $participant = $this->getUser();
+        if($participant->getId() != $sortie->getOrganisateur()->getId() && $participant->testEstInscrit($sortie)){
+            $sortie->removeParticipant($participant);
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+        }
+        return $this->redirectToRoute('sortie_index');
+    }
+
+    /**
      * @Route("/{id}/edit", name="sortie_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, Sortie $sortie): Response
