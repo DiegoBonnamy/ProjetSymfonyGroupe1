@@ -3,46 +3,49 @@
 {% block title %}Participant{% endblock %}
 
 {% block body %}
-    <div class="symfony-index">
-        <h1>Participant</h1>
+    <div class="symfony-form">
+
         <div class="row">
-            <!-- Col Photo -->
+            <div class="col">
+                <h1>Participant</h1>
+            </div>
+        </div>
+
+        <div class="row">
+
             <div class="col-lg-4">
                 <img src="https://source.unsplash.com/250x200/?people" style="margin-top:50px;" />
             </div>
-                <table class="table bg-white">
-                    <tbody>
-                    <tr>
-                        <th>Pseudo</th>
-                        <td>{{ participant.pseudo }}</td>
-                    </tr>
-                    <tr>
-                        <th>Nom</th>
-                        <td>{{ participant.nom }}</td>
-                    </tr>
-                    <tr>
-                        <th>Prenom</th>
-                        <td>{{ participant.prenom }}</td>
-                    </tr>
-                    <tr>
-                        <th>Telephone</th>
-                        <td>{{ participant.telephone }}</td>
-                    </tr>
-                    <tr>
-                        <th>Mail</th>
-                        <td>{{ participant.email }}</td>
-                    </tr>
-                    <tr>
-                        <th>Actif</th>
-                        <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <a href="{{ path('participant_index') }}">back to list</a>
 
-{#                <a href="{{ path('participant_edit', {'id': participant.id}) }}">edit</a>#}
+            <div class="col-lg-8">
+                <p>
+                    Pseudo : {{ participant.pseudo }}
+                </p>
 
-                {{ include('participant/_delete_form.html.twig') }}
+                <p>
+                    Nom : {{ participant.nom }}
+                </p>
+
+                <p>
+                    Prenom : {{ participant.prenom }}
+                </p>
+
+                <p>
+                    Telephone : {{ participant.telephone }}
+                </p>
+
+                <p>
+                    Telephone : {{ participant.email }}
+                </p>
+            </div>
+
         </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <a href="{{ path('sortie_index') }}" class="btn btn-black text-white text-center" style="border-radius:25px;">Retour</a>
+            </div>
+        </div>
+
     </div>
 {% endblock %}

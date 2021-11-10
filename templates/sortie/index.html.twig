@@ -93,7 +93,11 @@
                                 <td>x / {{ sortie.nbInscriptionsMax }}</td>
                                 <td>{{ sortie.etat.libelle }}</td>
                                 <td>X</td>
-                                <td>{{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}</td>
+                                <td>
+                                    <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}" class="text-dark">
+                                        {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}
+                                    </a>
+                                </td>
                                 <td>
                                     {% if sortie.organisateur.id != app.user.id %}
                                         {% if sortie.etat.libelle == "Ouvert" %}
