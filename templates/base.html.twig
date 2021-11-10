@@ -63,7 +63,7 @@
             <a class="navbar-brand">Sortir.com</a>
             <a class="text-white" style="margin-left:70%;">Accueil</a>
             <a class="text-white">Mon profil</a>
-            <a class="text-white">Se déconnecter</a>
+            <a href="{{ path('app_logout') }}" class="text-white">Se déconnecter</a>
             </div>
         </nav>
         {% block body %}{% endblock %}

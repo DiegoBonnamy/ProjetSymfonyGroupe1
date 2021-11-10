@@ -3,45 +3,25 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <div  class="offset-3 col-6">
-        <form method="post">
-            {% if error %}
-                <div class="alert alert-danger"> Identifiant ou mot de passe incorrect{#*{{ error.messageKey|trans(error.messageData, 'security') }}*/#}</div>
-            {% endif %}
+    <form method="post" class="symfony-form">
+        {% if error %}
+            <div class="alert alert-danger"> Identifiant ou Mot de passe incorrect </div>
+        {% endif %}
 
-            {% if app.user %}
-                <div class="mb-3">
-                    You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-                </div>
-            {% endif %}
+        <label for="inputEmail">Identifiant</label>
+        <input type="texte" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+        <label for="inputPassword">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
-            <label for="inputEmail">Identifiant</label>
-            <input type="texte" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" placeholder="email ou pseudo" autocomplete="email" required autofocus>
-            <label for="inputPassword">Mot de passe</label>
-            <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+        <div class="checkbox mb-3">
+            <label>
+                <input type="checkbox" name="_remember_me"> Se souvenir de moi
+            </label>
+        </div>
 
+        <button class="btn btn-primary" style="border-radius:25px;">Connexion</button>
 
-
-
-            <input type="hidden" name="_csrf_token"
-                   value="{{ csrf_token('authenticate') }}"
-            >
-
-
-            <div>
-                <div class="checkbox mb-3">
-                    <label>
-                        <input type="checkbox" name="_remember_me"> Se souvenir de moi
-                    </label>
-                </div>
-
-
-                <a href="#" >Mot de passe oublié</a>
-                <button class="btn btn-lg btn-primary" type="submit">
-                    Connexion
-                </button>
-            </div>
-        </form>
-    </div>
+    </form>
 {% endblock %}
