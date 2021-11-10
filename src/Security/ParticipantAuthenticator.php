@@ -31,12 +31,12 @@ class ParticipantAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): PassportInterface
     {
-        $pseudo = $request->request->get('pseudo', '');
+        $email = $request->request->get('email', '');
 
-        $request->getSession()->set(Security::LAST_USERNAME, $pseudo);
+        $request->getSession()->set(Security::LAST_USERNAME, $email);
 
         return new Passport(
-            new UserBadge($pseudo),
+            new UserBadge($email),
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->get('_csrf_token')),
@@ -52,17 +52,16 @@ class ParticipantAuthenticator extends AbstractLoginFormAuthenticator
 
         // For example:
         return new RedirectResponse($this->urlGenerator->generate('sortie_index'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        //throw new \Exception(' provide a valid redirect inside '.__FILE__);
     }
 
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);
     }
-
-    public function supports(Request $request) : bool 
-    { 
-        return self::LOGIN_ROUTE === $request->attributes->get('_route') 
-        && $request->isMethod('POST'); 
+    public function supports(Request $request) : bool
+    {
+        return self::LOGIN_ROUTE === $request->attributes->get('_route')
+            && $request->isMethod('POST');
     }
 }

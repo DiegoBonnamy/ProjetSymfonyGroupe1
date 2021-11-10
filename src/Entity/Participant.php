@@ -6,12 +6,13 @@ use App\Repository\ParticipantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ParticipantRepository::class)
+ * @UniqueEntity(fields={"email"}, message="There is already an account with this email")
  */
 class Participant implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -23,17 +24,33 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string", length=180, unique=true)
+     */
+    private $email;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles = [];
+
+    /**
+     * @var string The hashed password
+     * @ORM\Column(type="string")
+     */
+    private $password;
+
+    /**
+     * @ORM\Column(type="string", length=50)
      */
     private $pseudo;
 
     /**
-     * @ORM\Column(type="string", length=80)
+     * @ORM\Column(type="string", length=50)
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=50)
      */
     private $prenom;
 
@@ -42,44 +59,106 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $telephone;
 
-    /**
-     * @ORM\Column(type="string", length=50)
-     */
-    private $mail;
+
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $mot_de_passe;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default" : 0})
-     */
-    private $administrateur;
-
-    /**
-     * @ORM\Column(type="boolean", options={"default" : 0})
+     * @ORM\Column(type="boolean")
      */
     private $actif;
 
-    /**
-     * @ORM\Column(type="integer", options={"default" : 0})
-     */
-    private $sites_no_site;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Sortie::class, mappedBy="estInscrit")
-     */
-    private $estInscrit;
 
     public function __construct()
     {
-        $this->estInscrit = new ArrayCollection();
+
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): self
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @deprecated since Symfony 5.3, use getUserIdentifier instead
+     */
+    public function getUsername(): string
+    {
+        return (string) $this->email;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
+
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
+    {
+        return $this->password;
+    }
+
+    public function setPassword(string $password): self
+    {
+        $this->password = $password;
+
+        return $this;
+    }
+
+    /**
+     * Returning a salt is only needed, if you are not using a modern
+     * hashing algorithm (e.g. bcrypt or sodium) in your security.yaml.
+     *
+     * @see UserInterface
+     */
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
+    {
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 
     public function getPseudo(): ?string
@@ -130,41 +209,7 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getMail(): ?string
-    {
-        return $this->mail;
-    }
 
-    public function setMail(string $mail): self
-    {
-        $this->mail = $mail;
-
-        return $this;
-    }
-
-    public function getMotDePasse(): ?string
-    {
-        return $this->mot_de_passe;
-    }
-
-    public function setMotDePasse(string $mot_de_passe): self
-    {
-        $this->mot_de_passe = $mot_de_passe;
-
-        return $this;
-    }
-
-    public function getAdministrateur(): ?bool
-    {
-        return $this->administrateur;
-    }
-
-    public function setAdministrateur(bool $administrateur): self
-    {
-        $this->administrateur = $administrateur;
-
-        return $this;
-    }
 
     public function getActif(): ?bool
     {
@@ -174,119 +219,6 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
     public function setActif(bool $actif): self
     {
         $this->actif = $actif;
-
-        return $this;
-    }
-
-    public function getSitesNoSite(): ?int
-    {
-        return $this->sites_no_site;
-    }
-
-    public function setSitesNoSite(int $sites_no_site): self
-    {
-        $this->sites_no_site = $sites_no_site;
-
-        return $this;
-    }
-
-
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
-    public function getUsername(): string
-    {
-        return (string) $this->pseudo;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-        return array_unique($roles);
-    }
-
-    public function setRoles(array $roles): self
-    {
-        $this->roles = $roles;
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getPassword(): string
-    {
-        return (string) $this->mot_de_passe;
-    }
-
-    public function setPassword(UserPasswordHasherInterface $passwordHasher, string $password): self
-    {
-        $hashedPassword = $passwordHasher->hashPassword(
-            $this,
-            $password
-        );
-        $this->mot_de_passe = $hashedPassword;
-        return $this;
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function getSalt()
-    {
-        // not needed when using the "bcrypt" algorithm in security.yaml
-    }
-
-    /**
-     * @see UserInterface
-     */
-    public function eraseCredentials()
-    {
-        // If you store any temporary, sensitive data on the user, clear it here
-        // $this->plainPassword = null;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->nom = $name;
-        return $this;
-    }
-
-    /**
-     * @return Collection|Sortie[]
-     */
-    public function getEstInscrit(): Collection
-    {
-        return $this->estInscrit;
-    }
-
-    public function addEstInscrit(Sortie $estInscrit): self
-    {
-        if (!$this->estInscrit->contains($estInscrit)) {
-            $this->estInscrit[] = $estInscrit;
-            $estInscrit->addEstInscrit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeEstInscrit(Sortie $estInscrit): self
-    {
-        if ($this->estInscrit->removeElement($estInscrit)) {
-            $estInscrit->removeEstInscrit($this);
-        }
 
         return $this;
     }
