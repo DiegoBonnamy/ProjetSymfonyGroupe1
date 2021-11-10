@@ -23,9 +23,7 @@ class ParticipantType extends AbstractType
             ->add('prenom', TextType::class, ['constraints' =>[new NotBlank(['message' => 'Veuiller entrer un prénom'])]])
             ->add('telephone')
             ->add('email', EmailType::class, ['constraints' =>[new NotBlank(['message' => 'Veuiller entrer un mail'])]])
-//            ->add('administrateur', HiddenType::class, ['empty_data' => 0])
             ->add('actif', HiddenType::class, ['empty_data' => 0])
-//            ->add('sites_no_site', HiddenType::class, ['empty_data' => 0])
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller

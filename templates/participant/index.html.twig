@@ -6,7 +6,7 @@
     <div class="symfony-index">
         <h1>Participant index</h1>
 
-        <table class="table">
+        <table class="table bg-white">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -16,9 +16,7 @@
                     <th>Telephone</th>
                     <th>Mail</th>
                     <th>Mot_de_passe</th>
-                    <th>Administrateur</th>
                     <th>Actif</th>
-                    <th>Sites_no_site</th>
                     <th>actions</th>
                 </tr>
             </thead>
@@ -30,14 +28,12 @@
                     <td>{{ participant.nom }}</td>
                     <td>{{ participant.prenom }}</td>
                     <td>{{ participant.telephone }}</td>
-                    <td>{{ participant.mail }}</td>
-                    <td>{{ participant.motDePasse }}</td>
-                    <td>{{ participant.administrateur ? 'Yes' : 'No' }}</td>
+                    <td>{{ participant.email }}</td>
+                    <td>{{ participant.password }}</td>
                     <td>{{ participant.actif ? 'Yes' : 'No' }}</td>
-                    <td>{{ participant.sitesNoSite }}</td>
                     <td>
                         <a href="{{ path('participant_show', {'id': participant.id}) }}">show</a>
-                        <a href="{{ path('participant_edit', {'id': participant.id}) }}">edit</a>
+{#                        <a href="{{ path('participant_edit', {'id': participant.id}) }}">edit</a>#}
                     </td>
                 </tr>
             {% else %}
