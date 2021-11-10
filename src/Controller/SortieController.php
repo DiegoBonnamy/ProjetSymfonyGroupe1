@@ -62,6 +62,16 @@ class SortieController extends AbstractController
     }
 
     /**
+     * @Route("/cancel/{id}", name="sortie_cancel", methods={"GET"})
+     */
+    public function cancel(Sortie $sortie): Response
+    {
+        return $this->render('sortie/annuler.html.twig', [
+            'sortie' => $sortie,
+        ]);
+    }
+
+    /**
      * @Route("/register/{id}", name="sortie_register", methods={"GET"})
      */
     public function register(Sortie $sortie): Response
