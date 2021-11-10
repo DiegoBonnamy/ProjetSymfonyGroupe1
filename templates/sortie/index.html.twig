@@ -9,7 +9,7 @@
         <div class="row">
             <div class="col" style="text-align:right;">
                 <h5><b>Date du jour : {{ "now"|date("d/m/Y") }}</b></h5>
-                <h5><b>Participant : Jeanine L.</b></h5>
+                <h5><b>Participant : {{ app.user.prenom }} {{ app.user.nom }}</b></h5>
             </div>
         </div>
 
