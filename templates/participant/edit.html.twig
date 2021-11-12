@@ -32,8 +32,38 @@
                 <label>Email : </label>
                 {{ form_widget(form.email) }} <br/>
 
+                <label>Saisie du mot de passe : </label>
+                <input class="form-select" type="password" name="_oldPassword" required /><br/>
+
                 <label>Mot de passe : </label>
-                {{ form_widget(form.password) }} <br/>
+                {{ form_widget(form.plainPassword) }} <br/>
+
+                <label>Confirmation du mot de passe : </label>
+                <input class="form-select" type="password" name="_confirm" /><br/>
+
+                {% if error_message != null %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ error_message }}
+                    </div><br/>
+                {% endif %}
+
+                {% if not form.vars.valid %}
+                    <div class="alert alert-danger" role="alert">
+                        <ul>
+                            {% for child in form.children %}
+                                {% for error in child.vars.errors %}
+                                    <li>{{error.message}}</li>
+                                {% endfor %}
+                            {% endfor %}
+                        </ul>
+                    </div><br/>
+                {% endif %}
+
+                {% if success_message != null %}
+                    <div class="alert alert-success" role="alert">
+                        {{ success_message }}
+                    </div><br/>
+                {% endif %}
 
                 <!-- Controles -->
                 <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>

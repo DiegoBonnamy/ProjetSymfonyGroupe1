@@ -30,9 +30,11 @@ class ParticipantType extends AbstractType
                 'mapped' => false,
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
+                    /*
                     new NotBlank([
                         'message' => 'Veuiller entrer un mot de passe',
                     ]),
+                    */
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Votre mot de passe est trop court (min 6 characters)',
@@ -40,6 +42,7 @@ class ParticipantType extends AbstractType
                         'max' => 4096,
                     ]),
                 ],
+                'required' => false
             ])
         ;
     }
