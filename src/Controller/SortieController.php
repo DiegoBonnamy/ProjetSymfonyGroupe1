@@ -31,7 +31,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/new", name="sortie_new", methods={"GET","POST"})
      */
-    public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, Request $request): Response
+    public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, Request $request): Response
     {
         $sortie = new Sortie();
         $participant = $this->getUser();
@@ -47,6 +47,14 @@ class SortieController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            $lieuId = $request->request->get('_lieux');
+            dump($lieuId);
+            $lieu = $lieuRepository->findOneBy(
+                ['id' => $lieuId]
+            );
+            $sortie->setLieu($lieu);
+
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -174,6 +182,10 @@ class SortieController extends AbstractController
             ['ville' => $ville->getId()]
         );
 
+        foreach($lieux as $lieu){
+            $lieu->removeAllSorties();
+        }
+
         return $this->json($lieux);
     }
 
@@ -185,6 +197,8 @@ class SortieController extends AbstractController
         $unLieu = $repo->findOneBy(
             ['lieu' => $lieu->getId()]
         );
+
+        $lieu->removeAllSorties();
 
         return $this->json($lieu);
     }

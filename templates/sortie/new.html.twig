@@ -39,7 +39,7 @@
             <div class="col">
 
                 <label>Ville : </label><br/>
-                <select class="form-select" name="villes" id="villes" onchange="callApi()">
+                <select class="form-select" name="_villes" id="villes" onchange="callApi()">
                     {% for ville in villes %}
                         <option value="{{ ville.id }}">{{ ville.nom }}</option>
                     {% endfor %}
@@ -47,7 +47,7 @@
                 <br/>
 
                 <label>Lieu : </label><br/>
-                <select class="form-select" name="lieux" id="lieux" onchange="toggleInfoLieu()"></select>
+                <select class="form-select" name="_lieux" id="lieux" onchange="toggleInfoLieu()"></select>
                 <br/><br/>
 
 

@@ -141,9 +141,18 @@ class Lieu
     {
         if ($this->sorties->removeElement($sorty)) {
             // set the owning side to null (unless already changed)
-            if ($sorty->getLieux() === $this) {
-                $sorty->setLieux(null);
+            if ($sorty->getLieu() === $this) {
+                $sorty->setLieu(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function removeAllSorties(): self
+    {
+        foreach($this->getSorties() as $sortie){
+            $this->removeSorty($sortie);
         }
 
         return $this;
