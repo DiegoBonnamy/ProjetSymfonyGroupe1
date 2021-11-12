@@ -81,6 +81,11 @@ class Sortie
      */
     private $motif_annulation;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Site::class, inversedBy="sorties")
+     */
+    private $site;
+
     public function __construct()
     {
         $this->estInscrit = new ArrayCollection();
@@ -247,6 +252,18 @@ class Sortie
     public function setMotifAnnulation(?string $motif_annulation): self
     {
         $this->motif_annulation = $motif_annulation;
+
+        return $this;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): self
+    {
+        $this->site = $site;
 
         return $this;
     }
