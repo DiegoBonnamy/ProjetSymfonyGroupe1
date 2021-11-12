@@ -23,9 +23,34 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="sortie_index", methods={"GET"})
      */
-    public function index(SortieRepository $sortieRepository): Response
+    public function index(SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
     {
-        return $this->render('sortie/index.html.twig', ['sorties' => $sortieRepository->findAll()]);
+        $sorties = $sortieRepository->findAll();
+
+        /* Test cloture */
+        foreach ($sorties as $s) {
+            if($s->getDateDebut() == new \DateTime() &&
+                $s->getEtat()->getLibelle() == "Ouvert"){
+
+                $etat = $etatRepository->findOneBy(
+                    ['libelle' => "En cours"]
+                );
+                $s->setEtat($etat);
+
+            }
+            if($s->getDateCloture() < new \DateTime() &&
+                $s->getEtat()->getLibelle() != "Annulee"){
+
+                $etat = $etatRepository->findOneBy(
+                    ['libelle' => "Terminee"]
+                );
+                $s->setEtat($etat);
+
+            }
+        }
+
+
+        return $this->render('sortie/index.html.twig', ['sorties' => $sorties]);
     }
 
     /**
@@ -39,7 +64,7 @@ class SortieController extends AbstractController
         $sortie->setOrganisateur($participant);
 
         $etat = $etatRepository->findOneBy(
-            ['id' => 1]
+            ['libelle' => "Ouvert"]
         );
         $sortie->setEtat($etat);
 
@@ -123,9 +148,16 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_index');
         }
 
-        return $this->render('sortie/annuler.html.twig', [
-            'sortie' => $sortie,
-        ]);
+        if($this->getUser()->getId() == $sortie->getOrganisateur()->getId() &&
+            $sortie->getEtat()->getLibelle() == "Ouvert"){
+
+            return $this->render('sortie/annuler.html.twig', [
+                'sortie' => $sortie,
+            ]);
+        }
+        else{
+            return $this->redirectToRoute('sortie_index');
+        }
     }
 
     /**
@@ -134,7 +166,10 @@ class SortieController extends AbstractController
     public function register(Sortie $sortie): Response
     {
         $participant = $this->getUser();
-        if ($participant->getId() != $sortie->getOrganisateur()->getId()) {
+        if ($participant->getId() != $sortie->getOrganisateur()->getId() &&
+            $sortie->getEtat()->getLibelle() == "Ouvert" &&
+            $sortie->getNbInscriptionsMax() > count($sortie->getParticipants())) {
+
             $sortie->addParticipant($participant);
             $participant->addEstInscrit($sortie);
 
@@ -152,7 +187,10 @@ class SortieController extends AbstractController
     public function unsubscribe(Sortie $sortie): Response
     {
         $participant = $this->getUser();
-        if ($participant->getId() != $sortie->getOrganisateur()->getId() && $participant->testEstInscrit($sortie)) {
+        if ($participant->getId() != $sortie->getOrganisateur()->getId() &&
+            $participant->testEstInscrit($sortie) &&
+            $sortie->getEtat()->getLibelle() == "Ouvert") {
+
             $sortie->removeParticipant($participant);
 
             $entityManager = $this->getDoctrine()->getManager();
