@@ -2,10 +2,9 @@
 
 namespace App\Form;
 
-use App\Entity\Lieu;
 use App\Entity\Sortie;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -15,9 +14,11 @@ class SortieType extends AbstractType
     {
         $builder
             ->add('nom')
-            ->add('dateDebut')
+            ->add('dateDebut', DateType::class, [
+                'widget' => 'single_text'])
             ->add('duree')
-            ->add('dateCloture')
+            ->add('dateCloture', DateType::class, [
+                'widget' => 'single_text'])
             ->add('nbInscriptionsMax')
             ->add('descriptionInfos')
             ->add('urlPhoto')

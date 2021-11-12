@@ -28,17 +28,17 @@
                 <br/><br/>
 
                 <label>Le nom de la sortie contient : </label>
-                <input type="text" placeholder="search" />
+                <input type="text" placeholder="search"/>
                 <br/><br/>
 
                 <div class="row">
                     <div class="col">
                         <label>Entre : </label>
-                        <input type="date" />
+                        <input type="date"/>
                     </div>
                     <div class="col">
                         <label> et : </label>
-                        <input type="date" />
+                        <input type="date"/>
                     </div>
                 </div>
             </div>
@@ -61,7 +61,8 @@
             </div>
 
             <div class="col">
-                <button class="btn btn-lg btn-black text-white" style="border-radius:25px;margin-top:15%;">Rechercher</button>
+                <button class="btn btn-lg btn-black text-white" style="border-radius:25px;margin-top:15%;">Rechercher
+                </button>
             </div>
 
 
@@ -70,56 +71,60 @@
 
         <!-- Tableau résultats -->
         <div class="row" style="margin-top:45px;">
-            <div class="col">
+            <div class="col" style="overflow-y:scroll; height:250px;">
                 <table class="table table-striped bg-white">
                     <thead>
-                        <tr>
-                            <th>Nom de la sortie</th>
-                            <th>Date de la sortie</th>
-                            <th>Clôture</th>
-                            <th>Inscrits / Places</th>
-                            <th>Etat</th>
-                            <th>Inscrit</th>
-                            <th>Organisateur</th>
-                            <th>Actions</th>
-                        </tr>
+                    <tr>
+                        <th>Nom de la sortie</th>
+                        <th>Date de la sortie</th>
+                        <th>Clôture</th>
+                        <th>Inscrits / Places</th>
+                        <th>Etat</th>
+                        <th>Inscrit</th>
+                        <th>Organisateur</th>
+                        <th>Actions</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {% for sortie in sorties %}
-                            <tr>
-                                <td>{{ sortie.nom }}</td>
-                                <td>{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
-                                <td>{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
-                                <td>x / {{ sortie.nbInscriptionsMax }}</td>
-                                <td>
-                                    {{ sortie.etat.libelle }}
-                                    {% if sortie.etat.libelle == "Annulee" %}
-                                        ( {{ sortie.getMotifAnnulation() }} )
-                                    {% endif %}
-                                </td>
-                                <td>X</td>
-                                <td>
-                                    <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}" class="text-dark">
-                                        {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}
-                                    </a>
-                                </td>
-                                <td>
-                                    {% if sortie.organisateur.id != app.user.id %}
-                                        {% if sortie.etat.libelle == "Ouvert" %}
-                                            {% if app.user in sortie.participants %}
-                                                <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}" class="text-dark"> Se désinscrire </a>
-                                            {% else %}
-                                                <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}" class="text-dark"> S'inscrire </a>
-                                            {% endif %}
-                                        {% endif %}
-                                    {% else %}
-                                        {% if sortie.etat.libelle == "Ouvert" %}
-                                            <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}" class="text-dark"> Annuler </a>
+                    {% for sortie in sorties %}
+                        <tr>
+                            <td>{{ sortie.nom }}</td>
+                            <td>{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
+                            <td>{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
+                            <td>x / {{ sortie.nbInscriptionsMax }}</td>
+                            <td>
+                                {{ sortie.etat.libelle }}
+                                {% if sortie.etat.libelle == "Annulee" %}
+                                    ( {{ sortie.getMotifAnnulation() }} )
+                                {% endif %}
+                            </td>
+                            <td>X</td>
+                            <td>
+                                <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}"
+                                   class="text-dark">
+                                    {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}
+                                </a>
+                            </td>
+                            <td>
+                                {% if sortie.organisateur.id != app.user.id %}
+                                    {% if sortie.etat.libelle == "Ouvert" %}
+                                        {% if app.user in sortie.participants %}
+                                            <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}"
+                                               class="text-dark"> Se désinscrire </a>
+                                        {% else %}
+                                            <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}"
+                                               class="text-dark"> S'inscrire </a>
                                         {% endif %}
                                     {% endif %}
-                                </td>
-                            </tr>
-                        {% endfor %}
+                                {% else %}
+                                    {% if sortie.etat.libelle == "Ouvert" %}
+                                        <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}"
+                                           class="text-dark"> Annuler </a>
+                                    {% endif %}
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
                     </tbody>
                 </table>
             </div>
@@ -127,7 +132,8 @@
 
         <div class="row">
             <div class="col" style="text-align:left;">
-                <a href="{{ path('sortie_new') }}" class="btn btn-black text-white text-center" style="border-radius:25px;">Créer une sortie</a>
+                <a href="{{ path('sortie_new') }}" class="btn btn-primary text-white text-center mt-3"
+                   style="border-radius:25px;">Créer une sortie</a>
             </div>
         </div>
 

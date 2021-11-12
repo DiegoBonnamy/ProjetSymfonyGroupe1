@@ -36,6 +36,7 @@ class SortieController extends AbstractController
         $sortie = new Sortie();
         $participant = $this->getUser();
 
+        //
         $sortie->setOrganisateur($participant);
 
         $etat = $etatRepository->findOneBy(
