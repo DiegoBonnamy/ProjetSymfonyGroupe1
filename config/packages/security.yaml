@@ -46,3 +46,4 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/sortie, roles: ROLE_USER }
         - { path: ^/participant, roles: ROLE_USER }
+        - { path: ^/participant, roles: ROLE_USER }
