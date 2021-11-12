@@ -71,6 +71,11 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $estInscrit;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Site::class, inversedBy="participants")
+     */
+    private $site;
+
 
     public function __construct()
     {
@@ -261,5 +266,17 @@ class Participant implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         return false;
+    }
+
+    public function getSite(): ?Site
+    {
+        return $this->site;
+    }
+
+    public function setSite(?Site $site): self
+    {
+        $this->site = $site;
+
+        return $this;
     }
 }
