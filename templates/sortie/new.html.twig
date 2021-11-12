@@ -38,6 +38,10 @@
             <!-- Col 2 -->
             <div class="col">
 
+                <!-- ville organisatrice-->
+                <label class="mt-4">Ville organisatrice : {{ app.user.site.nom }}</label><br><br>
+
+                <!-- selecteur de la Ville -->
                 <label>Ville : </label><br/>
                 <select class="form-select" name="_villes" id="villes" onchange="callApi()">
                     {% for ville in villes %}
@@ -46,17 +50,22 @@
                 </select>
                 <br/>
 
+                <!-- selecteur du lieu -->
                 <label>Lieu : </label><br/>
-                <select class="form-select" name="_lieux" id="lieux" onchange="toggleInfoLieu()"></select>
+                <select class="form-select" name="_lieux" id="lieux" onchange="afficherInfoLieu()"></select>
                 <br/><br/>
 
-
+                <!-- LIEU -->
+                <!-- nom -->
                 <div class="mb-5" id="dNomLieu"></div>
 
+                <!-- rue -->
                 <div class="mb-5" id="dRue"></div>
 
+                <!-- longitude -->
                 <div class="mb-5" id="dLongitude"></div>
 
+                <!-- latitude -->
                 <div class="mb-5" id="dLatitude"></div>
                 <br/>
             </div>
@@ -102,11 +111,11 @@
                     element.value = lieu.id;
                     lieux_select.appendChild(element);
                 }
-                toggleInfoLieu()
+                afficherInfoLieu()
             });
         }
 
-        function toggleInfoLieu() {
+        function afficherInfoLieu() {
             var dNomLieu = document.getElementById("dNomLieu");
             var dRue = document.getElementById("dRue");
             var dLongitude = document.getElementById("dLongitude");
