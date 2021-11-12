@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Participant;
+use App\Entity\Site;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
+use App\Repository\SiteRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,7 +31,7 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/new", name="participant_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder, SiteRepository $siteRepository): Response
     {
         $user = new Participant();
         $form = $this->createForm(ParticipantType::class, $user);
@@ -52,6 +54,7 @@ class ParticipantController extends AbstractController
         }
 
         return $this->renderForm('participant/new.html.twig', [
+            'sites' => $siteRepository->findAll(),
             'participant' => $user,
             'form' => $form,
         ]);
@@ -141,7 +144,7 @@ class ParticipantController extends AbstractController
      */
     public function delete(Request $request, Participant $participant): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$participant->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $participant->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($participant);
             $entityManager->flush();

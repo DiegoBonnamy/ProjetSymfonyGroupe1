@@ -12,7 +12,7 @@
         <div class="row">
             <!-- Col Photo -->
             <div class="col-lg-4">
-                <img src="https://source.unsplash.com/250x200/?people" style="margin-top:50px;" />
+                <img src="https://source.unsplash.com/250x200/?people" style="margin-top:50px;"/>
             </div>
 
             <div class="col-lg-8">
@@ -25,6 +25,14 @@
 
                 <label>Nom : </label>
                 {{ form_widget(form.nom) }} <br/>
+
+                <!-- selecteur du site -->
+                <label>Site : </label><br/>
+                <select class="form-select" name="select_sites" id="select_sites">
+                    {% for site in sites %}
+                        <option value="{{ site.id }}">{{ site.nom }}</option>
+                    {% endfor %}
+                </select><br/>
 
                 <label>Téléphone : </label>
                 {{ form_widget(form.telephone) }} <br/>
