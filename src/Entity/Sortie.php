@@ -76,6 +76,11 @@ class Sortie
      */
     private $participants;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $motif_annulation;
+
     public function __construct()
     {
         $this->estInscrit = new ArrayCollection();
@@ -230,6 +235,18 @@ class Sortie
         if ($this->participants->removeElement($participant)) {
             $participant->removeEstInscrit($this);
         }
+
+        return $this;
+    }
+
+    public function getMotifAnnulation(): ?string
+    {
+        return $this->motif_annulation;
+    }
+
+    public function setMotifAnnulation(?string $motif_annulation): self
+    {
+        $this->motif_annulation = $motif_annulation;
 
         return $this;
     }
