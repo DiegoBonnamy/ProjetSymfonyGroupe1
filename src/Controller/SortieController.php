@@ -6,6 +6,7 @@ use App\Entity\Lieu;
 use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\SortieType;
+use App\Repository\EtatRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use App\Repository\LieuRepository;
@@ -30,9 +31,18 @@ class SortieController extends AbstractController
     /**
      * @Route("/new", name="sortie_new", methods={"GET","POST"})
      */
-    public function new(VilleRepository $villeRepository, Request $request): Response
+    public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, Request $request): Response
     {
         $sortie = new Sortie();
+        $participant = $this->getUser();
+
+        $sortie->setOrganisateur($participant);
+
+        $etat = $etatRepository->findOneBy(
+            ['id' => 1]
+        );
+        $sortie->setEtat($etat);
+
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
@@ -77,7 +87,7 @@ class SortieController extends AbstractController
     public function register(Sortie $sortie): Response
     {
         $participant = $this->getUser();
-        if($participant->getId() != $sortie->getOrganisateur()->getId()){
+        if ($participant->getId() != $sortie->getOrganisateur()->getId()) {
             $sortie->addParticipant($participant);
             $participant->addEstInscrit($sortie);
 
@@ -95,7 +105,7 @@ class SortieController extends AbstractController
     public function unsubscribe(Sortie $sortie): Response
     {
         $participant = $this->getUser();
-        if($participant->getId() != $sortie->getOrganisateur()->getId() && $participant->testEstInscrit($sortie)){
+        if ($participant->getId() != $sortie->getOrganisateur()->getId() && $participant->testEstInscrit($sortie)) {
             $sortie->removeParticipant($participant);
 
             $entityManager = $this->getDoctrine()->getManager();
@@ -130,7 +140,7 @@ class SortieController extends AbstractController
      */
     public function delete(Request $request, Sortie $sortie): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$sortie->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $sortie->getId(), $request->request->get('_token'))) {
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->remove($sortie);
             $entityManager->flush();

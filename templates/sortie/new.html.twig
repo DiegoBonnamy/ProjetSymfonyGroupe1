@@ -62,7 +62,7 @@
         <!-- Controles -->
         <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
         <button class="btn btn-dark" style="border-radius:25px;">Publier la sortie</button>
-        <button class="btn btn-danger" style="border-radius:25px;">Annuler</button>
+        <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
 
         {{ form_end(form) }}
 
@@ -105,7 +105,7 @@
             let url = '{{ app.request.getBaseURL() }}/sortie/api/lieux/' + lieux_select.value;
             axios.get(url).then(response => {
                 dNomLieu.innerHTML = 'Nom du lieu : ' + response.data.nom;
-                dRue.innerHTML = 'Rue ' + response.data.rue;
+                dRue.innerHTML = 'Rue : ' + response.data.rue;
             });
         }
     </script>
