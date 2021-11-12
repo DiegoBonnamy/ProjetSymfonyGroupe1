@@ -59,6 +59,12 @@
             </div>
         </div>
 
+        {% if error_message != null %}
+            <div class="alert alert-danger" role="alert">
+            {{ error_message }}
+            </div>
+        {% endif %}
+
         <!-- Controles -->
         <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
         <button class="btn btn-dark" style="border-radius:25px;">Publier la sortie</button>

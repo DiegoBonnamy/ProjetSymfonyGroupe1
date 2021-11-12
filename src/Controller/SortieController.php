@@ -36,7 +36,6 @@ class SortieController extends AbstractController
         $sortie = new Sortie();
         $participant = $this->getUser();
 
-        //
         $sortie->setOrganisateur($participant);
 
         $etat = $etatRepository->findOneBy(
@@ -49,6 +48,7 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
+            // Récupération du lieu
             $lieuId = $request->request->get('_lieux');
             dump($lieuId);
             $lieu = $lieuRepository->findOneBy(
@@ -56,6 +56,27 @@ class SortieController extends AbstractController
             );
             $sortie->setLieu($lieu);
 
+            // Vérification de la cohérence des dates
+            $dateDebut = $form["dateDebut"]->getData();
+            $dateCloture = $form["dateCloture"]->getData();
+            if($dateDebut < new \DateTime()){
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de début ne peux pas etre dépassée",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+            if($dateCloture < $dateDebut){
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de cloture doit est supérieur à la date de début",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            // Mise en base de la sortie
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($sortie);
             $entityManager->flush();
@@ -64,6 +85,7 @@ class SortieController extends AbstractController
         }
 
         return $this->renderForm('sortie/new.html.twig', [
+            'error_message' => null,
             'villes' => $villeRepository->findAll(),
             'sortie' => $sortie,
             'form' => $form,
