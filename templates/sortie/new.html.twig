@@ -55,13 +55,16 @@
 
                 <div class="mb-5" id="dRue"></div>
 
-                {{ form_widget(form.lieu) }} <br/>
+                <div class="mb-5" id="dLongitude"></div>
+
+                <div class="mb-5" id="dLatitude"></div>
+                <br/>
             </div>
         </div>
 
         {% if error_message != null %}
             <div class="alert alert-danger" role="alert">
-            {{ error_message }}
+                {{ error_message }}
             </div>
         {% endif %}
 
@@ -71,7 +74,6 @@
         <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
 
         {{ form_end(form) }}
-
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
@@ -107,11 +109,15 @@
         function toggleInfoLieu() {
             var dNomLieu = document.getElementById("dNomLieu");
             var dRue = document.getElementById("dRue");
+            var dLongitude = document.getElementById("dLongitude");
+            var dLatitude = document.getElementById("dLatitude");
             var lieux_select = document.getElementById("lieux");
             let url = '{{ app.request.getBaseURL() }}/sortie/api/lieux/' + lieux_select.value;
             axios.get(url).then(response => {
                 dNomLieu.innerHTML = 'Nom du lieu : ' + response.data.nom;
                 dRue.innerHTML = 'Rue : ' + response.data.rue;
+                dLongitude.innerHTML = 'Longitude : ' + response.data.longitude;
+                dLatitude.innerHTML = 'Latitude : ' + response.data.latitude;
             });
         }
     </script>
