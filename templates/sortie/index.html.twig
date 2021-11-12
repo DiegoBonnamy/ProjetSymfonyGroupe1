@@ -91,7 +91,7 @@
                             <td>{{ sortie.nom }}</td>
                             <td>{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
                             <td>{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
-                            <td>x / {{ sortie.nbInscriptionsMax }}</td>
+                            <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
                             <td>
                                 {{ sortie.etat.libelle }}
                                 {% if sortie.etat.libelle == "Annulee" %}
