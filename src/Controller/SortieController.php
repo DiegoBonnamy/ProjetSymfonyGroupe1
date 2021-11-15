@@ -32,8 +32,8 @@ class SortieController extends AbstractController
 
         /* Test cloture */
         foreach ($sorties as $s) {
-            if($s->getDateDebut() == new \DateTime() &&
-                $s->getEtat()->getLibelle() == "Ouvert"){
+            if ($s->getDateDebut() == new \DateTime() &&
+                $s->getEtat()->getLibelle() == "Ouvert") {
 
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "En cours"]
@@ -42,9 +42,11 @@ class SortieController extends AbstractController
 
             }
             $duree = $s->getDuree();
-            if($duree == null){ $duree = 1; }
-            if($s->getDateCloture()->add(new \DateInterval('P'.$duree.'D')) < new \DateTime() &&
-                $s->getEtat()->getLibelle() != "Annulee"){
+            if ($duree == null) {
+                $duree = 1;
+            }
+            if ($s->getDateCloture()->add(new \DateInterval('P' . $duree . 'D')) < new \DateTime() &&
+                $s->getEtat()->getLibelle() != "Annulee") {
 
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "Terminee"]
@@ -80,26 +82,61 @@ class SortieController extends AbstractController
 
             // Récupération du lieu
             $lieuId = $request->request->get('_lieux');
-            dump($lieuId);
             $lieu = $lieuRepository->findOneBy(
                 ['id' => $lieuId]
             );
             $sortie->setLieu($lieu);
 
-            // Vérification de la cohérence des dates
-            $dateDebut = $form["dateDebut"]->getData();
-            $dateCloture = $form["dateCloture"]->getData();
-            if($dateDebut < new \DateTime()){
+            //Champs du formulaire à tester
+            $dateSortie = $form["dateDebut"]->getData();
+            $dateLimiteInscription = $form["dateCloture"]->getData();
+            $duree = $form["duree"]->getData();
+            $nbInscriptionsMax = $form["nbInscriptionsMax"]->getData();
+
+            //Validation de la durée de la sortie
+            if ($duree < 1 && ($duree != null || $duree == 0)) {
                 return $this->renderForm('sortie/new.html.twig', [
-                    'error_message' => "La date de début ne peux pas etre dépassée",
+                    'error_message' => "La durée de la sortie ne peut être inférieur à 1 jour",
                     'villes' => $villeRepository->findAll(),
                     'sortie' => $sortie,
                     'form' => $form,
                 ]);
             }
-            if($dateCloture < $dateDebut){
+
+            //Validation du nombre d'inscriptions max de la sortie
+            if ($nbInscriptionsMax < 2) {
                 return $this->renderForm('sortie/new.html.twig', [
-                    'error_message' => "La date de cloture doit est supérieur à la date de début",
+                    'error_message' => "Le nombre d'inscriptions maximum ne peut être inférieur à 2",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Validation de la date de sortie
+            if ($dateSortie < new \DateTime()) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de la sortie ne doit pas être antérieur à aujourd'hui",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Validation de la date limite d'inscription
+            if ($dateLimiteInscription < new \DateTime()) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date limite d'inscription ne doit pas être antérieur à aujourd'hui",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Contrôle cohérence des dates
+            if ($dateLimiteInscription > $dateSortie) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de limite d'inscription doit être antérieur à la date de la sortie",
                     'villes' => $villeRepository->findAll(),
                     'sortie' => $sortie,
                     'form' => $form,
@@ -138,7 +175,7 @@ class SortieController extends AbstractController
     public function cancel(Request $request, Sortie $sortie, EtatRepository $etatRepository): Response
     {
         $motif = $request->request->get('_motif');
-        if($motif != null){
+        if ($motif != null) {
 
             $sortie->setMotifAnnulation($motif);
             $etat = $etatRepository->findOneBy(
@@ -153,14 +190,13 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_index');
         }
 
-        if($this->getUser()->getId() == $sortie->getOrganisateur()->getId() &&
-            $sortie->getEtat()->getLibelle() == "Ouvert"){
+        if ($this->getUser()->getId() == $sortie->getOrganisateur()->getId() &&
+            $sortie->getEtat()->getLibelle() == "Ouvert") {
 
             return $this->render('sortie/annuler.html.twig', [
                 'sortie' => $sortie,
             ]);
-        }
-        else{
+        } else {
             return $this->redirectToRoute('sortie_index');
         }
     }
@@ -183,7 +219,7 @@ class SortieController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
         }
-        return new RedirectResponse($this->generateUrl('sortie_index')."?msg=Inscription%20réussie");
+        return new RedirectResponse($this->generateUrl('sortie_index') . "?msg=Inscription%20réussie");
     }
 
     /**
@@ -202,7 +238,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
         }
-        return new RedirectResponse($this->generateUrl('sortie_index')."?msg=Désnscription%20réussie");
+        return new RedirectResponse($this->generateUrl('sortie_index') . "?msg=Désnscription%20réussie");
     }
 
     /**
@@ -248,7 +284,7 @@ class SortieController extends AbstractController
             ['ville' => $ville->getId()]
         );
 
-        foreach($lieux as $lieu){
+        foreach ($lieux as $lieu) {
             $lieu->removeAllSorties();
         }
 

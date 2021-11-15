@@ -90,6 +90,11 @@
                             <li class="nav-item">
                                 <a href="{{ path('sortie_index') }}" class="nav-link text-black">Accueil</a>
                             </li>
+                            {% if app.user.roles[0] == "ADMIN" %}
+                                <li class="nav-item">
+                                    <a href="{{ path('participant_new') }}" class="nav-link text-black">Ajouter un participant</a>
+                                </li>
+                            {% endif %}
                             <li class="nav-item">
                                 <a href="{{ path('participant_edit', {id : app.user.id}) }}" class="nav-link text-black">Mon profil</a>
                             </li>

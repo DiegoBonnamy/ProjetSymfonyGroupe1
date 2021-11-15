@@ -47,9 +47,6 @@ class ParticipantController extends AbstractController
             );
             $user->setSite($site);
 
-            //set actif on true
-            $user->setActif(true);
-
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
