@@ -87,19 +87,33 @@ class SortieController extends AbstractController
             $sortie->setLieu($lieu);
 
             // Vérification de la cohérence des dates
-            $dateDebut = $form["dateDebut"]->getData();
-            $dateCloture = $form["dateCloture"]->getData();
-            if($dateDebut < new \DateTime()){
+            $dateSortie = $form["dateDebut"]->getData();
+            $dateLimiteInscription = $form["dateCloture"]->getData();
+
+            //Validation de la date de sortie
+            if($dateSortie < new \DateTime()){
                 return $this->renderForm('sortie/new.html.twig', [
-                    'error_message' => "La date de début ne peux pas etre dépassée",
+                    'error_message' => "La date de la sortie ne doit pas être antérieur à aujourd'hui",
                     'villes' => $villeRepository->findAll(),
                     'sortie' => $sortie,
                     'form' => $form,
                 ]);
             }
-            if($dateCloture < $dateDebut){
+
+            //Validation de la date limite d'inscription
+            if($dateLimiteInscription < new \DateTime()){
                 return $this->renderForm('sortie/new.html.twig', [
-                    'error_message' => "La date de cloture doit est supérieur à la date de début",
+                    'error_message' => "La date limite d'inscription ne doit pas être antérieur à aujourd'hui",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Contrôle cohérence des dates
+            if($dateLimiteInscription > $dateSortie){
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de limite d'inscription doit être antérieur à la date de la sortie",
                     'villes' => $villeRepository->findAll(),
                     'sortie' => $sortie,
                     'form' => $form,
