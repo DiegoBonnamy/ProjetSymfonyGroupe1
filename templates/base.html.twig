@@ -6,21 +6,29 @@
 
         <!-- Bootstrap -->
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" rel="stylesheet" />
-        <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" rel="stylesheet" />
         <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.css" rel="stylesheet" />
+
+        <!-- Font -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 
         <!-- Style custom -->
         <style>
+            .html {
+                /*font-family: 'Dancing Script', cursive;*/
+            }
+
             .symfony-form {
                 margin-left:15%;
                 margin-right:15%;
                 margin-top:2%;
-                /* color: white; */
-                color: black;
+                color: white;
                 /* background-color: #363636; */
-                background-color: #65c1d5;
+                background-color: #448cac;
                 border-radius: 25px;
-                border: 5px solid #fa9c14;
+                border: 5px solid #f2e80e;
                 padding: 20px;
             }
 
@@ -28,12 +36,11 @@
                 margin-left:5%;
                 margin-right:5%;
                 margin-top:1%;
-                /* color: white; */
-                color: black;
+                color: white;
                 /* background-color: #363636; */
-                background-color: #65c1d5;
+                background-color: #448cac;
                 border-radius: 25px;
-                border: 5px solid #fa9c14;
+                border: 5px solid #f2e80e;
                 padding: 10px;
                 height: 80vh;
             }
@@ -41,18 +48,18 @@
             .symfony-block {
                 margin-left:2%;
                 margin-right:2%;
-                /* color: white; */
-                color: black;
+                color: white;
                 /* background-color: #363636; */
-                background-color: #65c1d5;
+                background-color: #cca45c;
                 border-radius: 25px;
-                border: 1px solid #fa9c14;
+                border: 1px solid #f2e80e;
                 padding: 5px;
             }
 
             body{
-                background-image: url("https://source.unsplash.com/1920x1080/?color");
-                background-size: cover;
+                /*background-image: url("https://source.unsplash.com/1920x1080/?color");
+                background-size: cover;*/
+                background-color: #042444;
                 margin-bottom: 100px;
                 /* background-blend-mode: luminosity; */
             }
@@ -60,20 +67,41 @@
             .form-label {
                 color: white;
             }
+
+            .navbar {
+                background-color: #65c1d5;
+            }
         </style>
 
     </head>
     <body>
-        <nav class="navbar navbar-primary bg-primary">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg">
             <div class="container-fluid">
-            <a href="{{ path('sortie_index') }}" class="navbar-brand text-white">Sortir.com</a>
-            {% if app.user %}
-                <a href="{{ path('sortie_index') }}" class="text-white" style="margin-left:70%;">Accueil</a>
-                <a href="{{ path('participant_edit', {id : app.user.id}) }}" class="text-white">Mon profil</a>
-                <a href="{{ path('app_logout') }}" class="text-white">Se déconnecter</a>
-            {% endif %}
+                <a href="{{ path('sortie_index') }}" class="navbar-brand text-black">
+                    <img src="{{ app.request.getBaseURL() }}/images/logo.png" height="45px" />
+                </a>
+                {% if app.user %}
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li class="nav-item">
+                                <a href="{{ path('sortie_index') }}" class="nav-link text-black">Accueil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('participant_edit', {id : app.user.id}) }}" class="nav-link text-black">Mon profil</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ path('app_logout') }}" class="nav-link text-black">Se déconnecter</a>
+                            </li>
+                        </ul>
+                    </div>
+                {% endif %}
             </div>
         </nav>
         {% block body %}{% endblock %}
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.6.0/mdb.min.js"></script>
     </body>
 </html>
