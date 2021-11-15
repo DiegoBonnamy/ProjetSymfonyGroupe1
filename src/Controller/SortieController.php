@@ -15,6 +15,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * @Route("/sortie")
@@ -24,8 +25,9 @@ class SortieController extends AbstractController
     /**
      * @Route("/", name="sortie_index", methods={"GET"})
      */
-    public function index(SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    public function index(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
     {
+        $msg = $request->query->get('msg');
         $sorties = $sortieRepository->findAll();
 
         /* Test cloture */
@@ -39,7 +41,9 @@ class SortieController extends AbstractController
                 $s->setEtat($etat);
 
             }
-            if($s->getDateCloture() < new \DateTime() &&
+            $duree = $s->getDuree();
+            if($duree == null){ $duree = 1; }
+            if($s->getDateCloture()->add(new \DateInterval('P'.$duree.'D')) < new \DateTime() &&
                 $s->getEtat()->getLibelle() != "Annulee"){
 
                 $etat = $etatRepository->findOneBy(
@@ -51,7 +55,7 @@ class SortieController extends AbstractController
         }
 
 
-        return $this->render('sortie/index.html.twig', ['sorties' => $sorties]);
+        return $this->render('sortie/index.html.twig', ['sorties' => $sorties, 'success_message' => $msg]);
     }
 
     /**
@@ -107,7 +111,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
 
-            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('sortie_index');
         }
 
         return $this->renderForm('sortie/new.html.twig', [
@@ -135,7 +139,7 @@ class SortieController extends AbstractController
     {
         $motif = $request->request->get('_motif');
         if($motif != null){
-            
+
             $sortie->setMotifAnnulation($motif);
             $etat = $etatRepository->findOneBy(
                 ['libelle' => 'Annulee']
@@ -164,7 +168,7 @@ class SortieController extends AbstractController
     /**
      * @Route("/register/{id}", name="sortie_register", methods={"GET"})
      */
-    public function register(Sortie $sortie): Response
+    public function register(Sortie $sortie, Request $request): Response
     {
         $participant = $this->getUser();
         if ($participant->getId() != $sortie->getOrganisateur()->getId() &&
@@ -179,7 +183,7 @@ class SortieController extends AbstractController
             $entityManager->persist($participant);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('sortie_index');
+        return new RedirectResponse($this->generateUrl('sortie_index')."?msg=Inscription%20réussie");
     }
 
     /**
@@ -198,7 +202,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
         }
-        return $this->redirectToRoute('sortie_index');
+        return new RedirectResponse($this->generateUrl('sortie_index')."?msg=Désnscription%20réussie");
     }
 
     /**

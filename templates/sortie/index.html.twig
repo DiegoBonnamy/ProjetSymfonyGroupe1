@@ -68,16 +68,26 @@
 
         </div>
 
+        {% if success_message != null %}
+            <div class="row" style="margin-top:45px;">
+                <div class="col">
+                    <div class="alert alert-success" role="alert">
+                        {{ success_message }}
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+
 
         <!-- Tableau résultats -->
-        <div class="row" style="margin-top:45px;">
+        <div class="row" style="margin-top:25px;">
             <div class="col" style="overflow-y:scroll; height:250px;">
                 <table class="table table-striped bg-white">
                     <thead>
                     <tr>
                         <th>Nom de la sortie</th>
                         <th>Date de la sortie</th>
-                        <th>Clôture</th>
+                        <th>Clôture des inscriptions</th>
                         <th>Inscrits / Places</th>
                         <th>Etat</th>
                         <th>Inscrit</th>
@@ -95,10 +105,14 @@
                             <td>
                                 {{ sortie.etat.libelle }}
                                 {% if sortie.etat.libelle == "Annulee" %}
-                                    ( {{ sortie.getMotifAnnulation() }} )
+                                    <i class="fas fa-info-circle" title="{{ sortie.getMotifAnnulation() }}"></i>
                                 {% endif %}
                             </td>
-                            <td>X</td>
+                            <td>
+                                {% if app.user in sortie.participants %}
+                                    <i class="fas fa-check"></i>
+                                {% endif %}
+                            </td>
                             <td>
                                 <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}"
                                    class="text-dark">
@@ -110,16 +124,16 @@
                                     {% if sortie.etat.libelle == "Ouvert" %}
                                         {% if app.user in sortie.participants %}
                                             <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}"
-                                               class="text-dark"> Se désinscrire </a>
+                                               class="btn btn-danger" style="border-radius:25px;"> Se désinscrire </a>
                                         {% else %}
                                             <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}"
-                                               class="text-dark"> S'inscrire </a>
+                                               class="btn btn-success" style="border-radius:25px;"> S'inscrire </a>
                                         {% endif %}
                                     {% endif %}
                                 {% else %}
                                     {% if sortie.etat.libelle == "Ouvert" %}
                                         <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}"
-                                           class="text-dark"> Annuler </a>
+                                           class="btn btn-danger" style="border-radius:25px;"> Annuler </a>
                                     {% endif %}
                                 {% endif %}
                             </td>
