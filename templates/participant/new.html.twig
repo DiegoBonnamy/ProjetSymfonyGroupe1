@@ -28,7 +28,7 @@
 
                 <!-- selecteur du site -->
                 <label>Site : </label><br/>
-                <select class="form-select" name="select_sites" id="select_sites">
+                <select class="form-select" name="_sites" id="sites">
                     {% for site in sites %}
                         <option value="{{ site.id }}">{{ site.nom }}</option>
                     {% endfor %}

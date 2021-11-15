@@ -38,6 +38,18 @@ class ParticipantController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+
+            // Récupération du site
+            $siteId = $request->get('_sites');
+            $site = $siteRepository->findOneBy(
+                ['id' => $siteId]
+            );
+            $user->setSite($site);
+
+            //set actif on true
+            $user->setActif(true);
+
             // encode the plain password
             $user->setPassword(
                 $passwordEncoder->encodePassword(
