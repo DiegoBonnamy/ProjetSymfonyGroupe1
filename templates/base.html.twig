@@ -68,7 +68,10 @@
             <div class="container-fluid">
             <a href="{{ path('sortie_index') }}" class="navbar-brand text-white">Sortir.com</a>
             {% if app.user %}
-                <a href="{{ path('sortie_index') }}" class="text-white" style="margin-left:70%;">Accueil</a>
+                <a href="{{ path('sortie_index') }}" class="text-white" style="margin-left:65%;">Accueil</a>
+                {% if app.user.roles[0] == "ADMIN" %}
+                    <a href="{{ path('participant_new') }}" class="text-white">Ajouter un participant</a>
+                {% endif %}
                 <a href="{{ path('participant_edit', {id : app.user.id}) }}" class="text-white">Mon profil</a>
                 <a href="{{ path('app_logout') }}" class="text-white">Se déconnecter</a>
             {% endif %}
