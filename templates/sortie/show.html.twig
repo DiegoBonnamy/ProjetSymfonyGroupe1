@@ -64,5 +64,27 @@
                 </p>
             </div>
         </div>
+
+        <h2 class="display-5 mt-4">Liste des participants</h2>
+        <table class="table bg-white">
+            <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for participant in sortie.participants %}
+                <tr>
+                    <td>{{ participant.pseudo }}</td>
+                    <td>{{ participant.nom }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="12">Il n'y a aucun participant inscrit à cette sortie</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
     </div>
 {% endblock %}
