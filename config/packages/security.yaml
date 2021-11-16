@@ -45,6 +45,9 @@ security:
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/sortie, roles: ROLE_USER }
-        - { path: ^/participant, roles: ROLE_USER }
+        - { path: ^/participant/new, roles: ROLE_ADMIN }
+        - { path: ^/participant/desactive, roles: ROLE_ADMIN }
+        - { path: ^/participant/active, roles: ROLE_ADMIN }
         - { path: ^/participant/delete, roles: ROLE_ADMIN }
+        - { path: ^/participant, roles: ROLE_USER }
         - { path: ^/ville, roles: ROLE_ADMIN }
