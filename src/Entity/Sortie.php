@@ -225,6 +225,16 @@ class Sortie
         return $this->participants;
     }
 
+    public function testParticipant(Participant $participant): bool
+    {
+        foreach($this->participants as $p){
+            if($p->getId() == $participant->getId()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     public function addParticipant(Participant $participant): self
     {
         if (!$this->participants->contains($participant)) {

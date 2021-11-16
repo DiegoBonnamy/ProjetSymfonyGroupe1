@@ -19,22 +19,41 @@ class SortieRepository extends ServiceEntityRepository
         parent::__construct($registry, Sortie::class);
     }
 
-    // /**
-    //  * @return Sortie[] Returns an array of Sortie objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+    * @return Sortie[] Returns an array of Sortie objects
+    */
+    public function findByFilters($site, $search, $dateDebut, $dateFin)
     {
+        $search = "%".$search."%";
         return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
+            ->andWhere('s.site = :site')
+            ->andWhere('s.nom LIKE :search')
+            ->andWhere('s.dateDebut >= :dateDebut')
+            ->andWhere('s.dateDebut <= :dateFin')
+            ->setParameter('site', $site)
+            ->setParameter('search', $search)
+            ->setParameter('dateDebut', $dateDebut)
+            ->setParameter('dateFin', $dateFin)
             ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
+
+    /**
+    * @return Sortie[] Returns an array of Sortie objects
     */
+    public function findActual($etatOuvert, $etatEnCours)
+    {
+        return $this->createQueryBuilder('s')
+            ->andWhere('s.etat = :etatOuvert OR s.etat = :etatEnCours')
+            ->setParameter('etatOuvert', $etatOuvert)
+            ->setParameter('etatEnCours', $etatEnCours)
+            ->orderBy('s.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 
     /*
     public function findOneBySomeField($value): ?Sortie

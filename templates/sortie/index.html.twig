@@ -15,58 +15,60 @@
 
 
         <!-- Filtre -->
-        <div class="row symfony-block" style="margin-top:45px;">
+        <form method="POST">
+            <div class="row symfony-block" style="margin-top:45px;">
 
-            <div class="col" style="text-align:left;">
-                <h6><b>Filtrer les sorties : </b></h6>
-                <br/>
+                <div class="col" style="text-align:left;">
+                    <h6><b>Filtrer les sorties : </b></h6>
+                    <br/>
 
-                <label>Site : </label>
-                <select>
-                    <option>Saint Herblain</option>
-                </select>
-                <br/><br/>
+                    <label>Site : </label>
+                    <select name="_site">
+                        {% for site in sites %}
+                        <option value="{{ site.id }}" {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
+                        {% endfor %}
+                    </select>
+                    <br/><br/>
 
-                <label>Le nom de la sortie contient : </label>
-                <input type="text" placeholder="search"/>
-                <br/><br/>
+                    <label>Le nom de la sortie contient : </label>
+                    <input name="_search" type="text" placeholder="search" value="{{ searchValue }}"/>
+                    <br/><br/>
 
-                <div class="row">
-                    <div class="col">
-                        <label>Entre : </label>
-                        <input type="date"/>
-                    </div>
-                    <div class="col">
-                        <label> et : </label>
-                        <input type="date"/>
+                    <div class="row">
+                        <div class="col">
+                            <label>Entre : </label>
+                            <input name="_dateDebut" type="date" value="{{ dateDebutValue }}" />
+                        </div>
+                        <div class="col">
+                            <label> et : </label>
+                            <input name="_dateFin" type="date" value="{{ dateFinValue }}" />
+                        </div>
                     </div>
                 </div>
+
+                <div class="col" style="text-align:left;">
+                    <input type="checkbox" id="check1" name="_check1" {% if check1 == true %}checked{% endif %}>
+                    <label for="check1">Sorties dont je suis l'organisateur</label>
+                    <br/><br/>
+
+                    <input type="checkbox" id="check2" name="_check2" {% if check2 == true %}checked{% endif %}>
+                    <label for="check2">Sorties auxquelles je suis inscrit</label>
+                    <br/><br/>
+
+                    <input type="checkbox" id="check3" name="_check3" {% if check3 == true %}checked{% endif %}>
+                    <label for="check3">Sorties auxquelles je ne suis pas inscrit</label>
+                    <br/><br/>
+
+                    <input type="checkbox" id="check4" name="_check4" {% if check4 == true %}checked{% endif %}>
+                    <label for="check4">Sorties passées</label>
+                </div>
+
+                <div class="col">
+                    <input name="_submit" type="submit" class="btn btn-lg btn-black text-white" style="border-radius:25px;margin-top:15%;" value="Rechercher">
+                </div>
+
             </div>
-
-            <div class="col" style="text-align:left;">
-                <input type="checkbox" id="check1" name="check1" checked>
-                <label for="check1">Sorties dont je suis l'organisateur</label>
-                <br/><br/>
-
-                <input type="checkbox" id="check2" name="check2" checked>
-                <label for="check2">Sorties auxquelles je suis inscrit</label>
-                <br/><br/>
-
-                <input type="checkbox" id="check3" name="check3" checked>
-                <label for="check3">Sorties auxquelles je ne suis pas inscrit</label>
-                <br/><br/>
-
-                <input type="checkbox" id="check4" name="check4" checked>
-                <label for="check4">Sorties passées</label>
-            </div>
-
-            <div class="col">
-                <button class="btn btn-lg btn-black text-white" style="border-radius:25px;margin-top:15%;">Rechercher
-                </button>
-            </div>
-
-
-        </div>
+        </form>
 
         {% if success_message != null %}
             <div class="row" style="margin-top:45px;">
@@ -141,6 +143,17 @@
                     {% endfor %}
                     </tbody>
                 </table>
+
+                {% if warning_message != null %}
+                    <div class="row" style="margin-top:45px;">
+                        <div class="col">
+                            <div class="alert alert-warning" role="alert">
+                                {{ warning_message }}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+
             </div>
         </div>
 

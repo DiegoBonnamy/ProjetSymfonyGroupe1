@@ -8,6 +8,7 @@ use App\Entity\Sortie;
 use App\Entity\Ville;
 use App\Form\SortieType;
 use App\Repository\EtatRepository;
+use App\Repository\SiteRepository;
 use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use App\Repository\LieuRepository;
@@ -23,12 +24,13 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 class SortieController extends AbstractController
 {
     /**
-     * @Route("/", name="sortie_index", methods={"GET"})
+     * @Route("/", name="sortie_index", methods={"GET","POST"})
      */
-    public function index(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository): Response
+    public function index(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, SiteRepository $sitesRepository): Response
     {
         $msg = $request->query->get('msg');
         $sorties = $sortieRepository->findAll();
+        $sites = $sitesRepository->findAll();
 
         /* Test cloture */
         foreach ($sorties as $s) {
@@ -40,6 +42,9 @@ class SortieController extends AbstractController
                 );
                 $s->setEtat($etat);
 
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($s);
+                $entityManager->flush();
             }
             $duree = $s->getDuree();
             if ($duree == null) {
@@ -53,11 +58,108 @@ class SortieController extends AbstractController
                 );
                 $s->setEtat($etat);
 
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($s);
+                $entityManager->flush();
             }
         }
 
+        // On affiche seulement les sorties Ouverte ou en cours
+        $etatOuvert = $etatRepository->findOneBy(['libelle' => "Ouvert"]);
+        $etatEnCours = $etatRepository->findOneBy(['libelle' => "En cours"]);
+        $sorties = $sortieRepository->findActual($etatOuvert->getId(), $etatEnCours->getId());
 
-        return $this->render('sortie/index.html.twig', ['sorties' => $sorties, 'success_message' => $msg]);
+        // Filtre de recherche
+        $formSubmit = $request->request->get('_submit');
+        if($formSubmit){
+
+            $user = $this->getUser();
+
+            $site = $request->request->get('_site');
+            $search = $request->request->get('_search');
+            $dateDebut = $request->request->get('_dateDebut');
+            $dateFin = $request->request->get('_dateFin');
+
+            $sorties = $sortieRepository->findByFilters(
+                $site,
+                $search,
+                $dateDebut,
+                $dateFin
+            );
+
+            // Sorties dont je suis l'organisateur
+            $check1 = $request->request->get('_check1');
+            if($check1 != null){ $check1 = true; }else{ $check1 = false; }
+            // Sorties auxquelles je suis inscrit
+            $check2 = $request->request->get('_check2');
+            if($check2 != null){ $check2 = true; }else{ $check2 = false; }
+            // Sorties auxquelles je ne suis pas inscrit
+            $check3 = $request->request->get('_check3');
+            if($check3 != null){ $check3 = true; }else{ $check3 = false; }
+            // Sorties passées
+            $check4 = $request->request->get('_check4');
+            if($check4 != null){ $check4 = true; }else{ $check4 = false; }
+            $etatTerminee = $etatRepository->findOneBy(['libelle' => "Terminee"]);
+
+            if($dateDebut == ""){ $dateDebut = new \DateTime('1970-01-01'); }
+            if($dateFin == ""){ $dateFin = new \DateTime('2100-01-01'); }
+
+            // Application des filtres
+            foreach($sorties as $key => $s){
+                if($check1){
+                    if($s->getOrganisateur()->getId() != $user->getId()){
+                        unset($sorties[$key]);
+                    }
+                }
+                if($check2 && !$check3){
+                    if(!$s->testParticipant($user)){
+                        unset($sorties[$key]);
+                    }
+                }
+                if($check3 && !$check2){
+                    if($s->testParticipant($user)){
+                        unset($sorties[$key]);
+                    }
+                }
+                if($check4){
+                    if($s->getEtat()->getId() != $etatTerminee->getId()){
+                        unset($sorties[$key]);
+                    }
+                }
+            }
+        }
+        else{
+            $site = "";
+            $search = "";
+            $dateDebut = "";
+            $dateFin = "";
+            $check1 = false;
+            $check2 = false;
+            $check3 = false;
+            $check4 = false;
+        }
+
+        if(count($sorties) == 0){
+            $warning = "Aucune sortie ne correspond aux filtres";
+        }
+        else{
+            $warning = null;
+        }
+
+        return $this->render('sortie/index.html.twig', [
+            'sorties' => $sorties,
+            'sites' => $sites,
+            'siteValue' => $site,
+            'searchValue' => $search,
+            'dateDebutValue' => $dateDebut,
+            'dateFinValue' => $dateFin,
+            'check1' => $check1,
+            'check2' => $check2,
+            'check3' => $check3,
+            'check4' => $check4,
+            'success_message' => $msg,
+            'warning_message' => $warning
+        ]);
     }
 
     /**
