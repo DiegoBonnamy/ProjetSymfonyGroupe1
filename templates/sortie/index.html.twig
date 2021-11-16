@@ -132,13 +132,18 @@
                                     {% if sortie.etat.libelle == "Ouvert" %}
                                         {% if app.user in sortie.participants %}
                                             <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}"
-                                               class="btn btn-danger" style="border-radius:25px;"> Se désinscrire </a>
+                                               class="btn btn-secondary" style="border-radius:25px;"> Se désinscrire </a>
                                         {% else %}
                                             <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}"
                                                class="btn btn-success" style="border-radius:25px;"> S'inscrire </a>
                                         {% endif %}
                                     {% endif %}
                                 {% else %}
+                                    <!-- TODO la modif n'est possible que si l'état de la sortie est "en création" -->
+                                    {% if sortie.etat.libelle == "Ouvert" %}
+                                        <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}/edit"
+                                           class="btn btn-primary" style="border-radius:25px;"> Modifier </a>
+                                    {% endif %}
                                     {% if sortie.etat.libelle == "Ouvert" %}
                                         <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}"
                                            class="btn btn-danger" style="border-radius:25px;"> Annuler </a>

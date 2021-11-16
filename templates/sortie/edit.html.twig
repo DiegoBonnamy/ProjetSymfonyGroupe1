@@ -3,11 +3,129 @@
 {% block title %}Edit Sortie{% endblock %}
 
 {% block body %}
-    <h1>Edit Sortie</h1>
+    <div class="text-center symfony-form">
+        <h1>Modifier la sortie</h1>
 
-    {{ include('sortie/_form.html.twig', {'button_label': 'Update'}) }}
+        {{ form_start(form) }}
+        <div class="row">
+            <!-- Col 1 -->
+            <div class="col">
 
-    <a href="{{ path('sortie_index') }}">back to list</a>
+                <label>Nom de la sortie : </label>
+                {{ form_widget(form.nom) }} <br/>
 
-    {{ include('sortie/_delete_form.html.twig') }}
+                <label>Date de la sortie : </label>
+                {{ form_widget(form.dateDebut) }} <br/>
+
+                <label>Date limite d'inscription : </label>
+                {{ form_widget(form.dateCloture) }} <br/>
+
+                <label>Nombre de places : </label>
+                {{ form_widget(form.nbInscriptionsMax) }} <br/>
+
+                <label>Durée (en jours) : </label>
+                {{ form_widget(form.duree) }} <br/>
+
+                <label>Image mis en avant : </label>
+                {{ form_widget(form.urlPhoto) }} <br/>
+
+                <label>Description et infos : </label>
+                {{ form_widget(form.descriptionInfos) }} <br/>
+
+            </div>
+            <!-- Col 2 -->
+            <div class="col">
+
+                <!-- ville organisatrice-->
+                <label class="mt-4">Ville organisatrice : {{ app.user.site.nom }}</label><br><br>
+
+                <!-- selecteur de la Ville -->
+                <label>Ville : </label><br/>
+                <select class="form-select" name="_villes" id="villes" onchange="callApi()">
+                    {% for ville in villes %}
+                        <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                    {% endfor %}
+                </select>
+                <br/>
+
+                <!-- selecteur du lieu -->
+                <label>Lieu : </label><br/>
+                <select class="form-select" name="_lieux" id="lieux" onchange="afficherInfoLieu()"></select>
+                <br/><br/>
+
+                <!-- LIEU -->
+                <!-- nom -->
+                <div class="mb-5" id="dNomLieu"></div>
+
+                <!-- rue -->
+                <div class="mb-5" id="dRue"></div>
+
+                <!-- longitude -->
+                <div class="mb-5" id="dLongitude"></div>
+
+                <!-- latitude -->
+                <div class="mb-5" id="dLatitude"></div>
+                <br/>
+            </div>
+        </div>
+
+        {% if error_message != null %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div>
+        {% endif %}
+
+        <!-- Controles -->
+        <button class="btn btn-success" style="border-radius:25px;">Enregistrer la sortie</button>
+        <a href="{{ path('sortie_cancel', {'id': sortie.id}) }}" class="btn btn-danger" style="border-radius:25px;">Annuler la sortie</a>
+        <a href="{{ path('sortie_index') }}" class="btn btn-secondary" style="border-radius:25px;">Retour</a>
+
+        {{ form_end(form) }}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script>
+        callApi();
+
+        function callApi() {
+            var villes_select = document.getElementById("villes");
+            var lieux_select = document.getElementById("lieux");
+            var ville_id = villes_select.value;
+
+
+            let url = '{{ app.request.getBaseURL() }}/sortie/api/villes/' + ville_id;
+            axios.get(url).then(response => {
+                // Clear
+                var i, L = villes_select.options.length - 1;
+                for (i = L; i >= 0; i--) {
+                    lieux_select.remove(i);
+                }
+
+                // Fill
+                let tableau = response.data;
+                for (let lieu of tableau) {
+                    var element = document.createElement("option");
+                    element.textContent = lieu.nom;
+                    element.value = lieu.id;
+                    lieux_select.appendChild(element);
+                }
+                afficherInfoLieu()
+            });
+        }
+
+        function afficherInfoLieu() {
+            var dNomLieu = document.getElementById("dNomLieu");
+            var dRue = document.getElementById("dRue");
+            var dLongitude = document.getElementById("dLongitude");
+            var dLatitude = document.getElementById("dLatitude");
+            var lieux_select = document.getElementById("lieux");
+            let url = '{{ app.request.getBaseURL() }}/sortie/api/lieux/' + lieux_select.value;
+            axios.get(url).then(response => {
+                dNomLieu.innerHTML = 'Nom du lieu : ' + response.data.nom;
+                dRue.innerHTML = 'Rue : ' + response.data.rue;
+                dLongitude.innerHTML = 'Longitude : ' + response.data.longitude;
+                dLatitude.innerHTML = 'Latitude : ' + response.data.latitude;
+            });
+        }
+    </script>
 {% endblock %}
