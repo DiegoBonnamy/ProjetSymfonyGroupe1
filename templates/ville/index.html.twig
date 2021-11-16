@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Ville index{% endblock %}
+
+{% block body %}
+    <div class="text-center symfony-index">
+
+        <h1>Liste des villes</h1>
+
+        <table class="table table-striped bg-white" style="margin-top:45px;">
+            <thead>
+                <tr>
+                    <th>Ville</th>
+                    <th>Code Postal</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for ville in villes %}
+                    <tr>
+                        <form method="POST">
+                            <input type="hidden" name="_idVille" value="{{ ville.id }}" />
+                            <td>
+                                <span id="nom_{{ville.id}}">{{ ville.nom }}</span>
+                                <input type="text" name="_nom" value="{{ ville.nom }}" style="display:none;" id="nomInput_{{ville.id}}" />
+                            </td>
+                            <td>
+                                <span id="cp_{{ville.id}}">{{ ville.codePostal }}</span>
+                                <input type="text" name="_cp" value="{{ ville.codePostal }}" style="display:none;" id="cpInput_{{ville.id}}" />
+                            </td>
+                            <td>
+                                <a class="btn btn-warning" style="border-radius:25px;" id="btnModif_{{ville.id}}" onclick="modif({{ville.id}})"> Modifier </a>
+                                <input type="submit" name="_save" value="Enregistrer" class="btn btn-success" style="border-radius:25px;display:none" id="btnSave_{{ville.id}}"/>
+                                <a href="{{ path('ville_delete', {id : ville.id}) }}" class="btn btn-danger" style="border-radius:25px;"> Supprimer </a>
+                            </td>
+                        </form>
+                    </tr>
+                {% endfor %}
+
+                <tr>
+                    <form method="POST">
+                        <td>
+                            <input type="text" name="_nom" placeholder="Nom de la ville" required />
+                        </td>
+                        <td>
+                            <input type="number" name="_cp" placeholder="00000" required />
+                        </td>
+                        <td>
+                            <input type="submit" name="_submit" value="Ajouter" class="btn btn-success" style="border-radius:25px;" />
+                        </td>
+                    </form>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function modif(idVille){
+            document.getElementById("nom_"+idVille).style.display = "none";
+            document.getElementById("cp_"+idVille).style.display = "none";
+            document.getElementById("btnModif_"+idVille).style.display = "none";
+            document.getElementById("nomInput_"+idVille).style.display = "";
+            document.getElementById("cpInput_"+idVille).style.display = "";
+            document.getElementById("btnSave_"+idVille).style.display = "";
+        }
+    </script>
+{% endblock %}
