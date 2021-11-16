@@ -11,6 +11,8 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\File;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
 
 class EditParticipantType extends AbstractType
 {
@@ -50,6 +52,22 @@ class EditParticipantType extends AbstractType
             ->add('pseudo', TextType::class)
             ->add('telephone')
             ->add('site', SiteType::class, array('role' => $options['role']))
+            ->add('photo', FileType::class, [
+                'label' => 'Photo de profil',
+                'mapped' => false,
+                'required' => false,
+                'constraints' => [
+                    new File([
+                        'maxSize' => '1024k',
+                        'mimeTypes' => [
+                            'image/png',
+                            'image/jpg',
+                            'image/gif',
+                        ],
+                        'mimeTypesMessage' => 'Format incorrect',
+                    ])
+                ],
+            ])
         ;
     }
 

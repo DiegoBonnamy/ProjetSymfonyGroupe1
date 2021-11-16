@@ -12,7 +12,7 @@
         <div class="row">
             <!-- Col Photo -->
             <div class="col-lg-4">
-                <img src="https://source.unsplash.com/250x200/?people" style="margin-top:50px;" />
+                <img src="{{ app.request.getBaseURL() }}/images/{{participant.photo}}" style="margin-top:50px;" />
             </div>
 
             <div class="col-lg-8">
@@ -32,7 +32,8 @@
                 <label>Email * : </label>
                 {{ form_widget(form.email) }} <br/>
 
-                <label>Saisie du mot de passe * : </label>
+                <label>Photo de profil : </label>
+                {{ form_widget(form.photo) }} <br/>
 
                 <label>Site : </label>
                 {{ form_widget(form.site.nom) }} <br/>

@@ -13,6 +13,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/participant")
@@ -32,7 +35,7 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/new", name="participant_new", methods={"GET","POST"})
      */
-    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder, SiteRepository $siteRepository): Response
+    public function new(Request $request, UserPasswordEncoderInterface $passwordEncoder, SiteRepository $siteRepository, SluggerInterface $slugger): Response
     {
         $user = new Participant();
         $form = $this->createForm(ParticipantType::class, $user);
@@ -55,6 +58,23 @@ class ParticipantController extends AbstractController
                     $form->get('plainPassword')->getData()
                 )
             );
+
+            $photo = $form->get('photo')->getData();
+            if ($photo) {
+                $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                try {
+                    $photo->move(
+                        $this->getParameter('photo_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+                   
+                }
+                $user->setPhoto($newFilename);
+            }
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($user);
@@ -83,7 +103,7 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder): Response
+    public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(EditParticipantType::class, $participant, array('role' => $this->getUser()->getRoles()));
         $form->handleRequest($request);
@@ -115,6 +135,23 @@ class ParticipantController extends AbstractController
                             'form' => $form,
                         ]);
                     }
+                }
+
+                $photo = $form->get('photo')->getData();
+                if ($photo) {
+                    $originalFilename = pathinfo($photo->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid().'.'.$photo->guessExtension();
+
+                    try {
+                        $photo->move(
+                            $this->getParameter('photo_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                    
+                    }
+                    $participant->setPhoto($newFilename);
                 }
                 
 

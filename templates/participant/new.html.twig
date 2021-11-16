@@ -43,6 +43,9 @@
                 <label>Mot de passe * : </label>
                 {{ form_widget(form.plainPassword) }} <br/>
 
+                <label>Photo de profil : </label>
+                {{ form_row(form.photo) }} <br/>
+
                 <!-- Controles -->
                 <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
                 <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
