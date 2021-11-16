@@ -3,5 +3,66 @@
 {% block title %}Sortie{% endblock %}
 
 {% block body %}
-    
+
+    <div class="symfony-form">
+        <div class="row text-white m-5">
+            <!-- colonne 1 -->
+            <div class="col">
+                <p>
+                    Nom : {{ sortie.nom }}
+                </p>
+
+                <p>
+                    Date de la sortie : {{ sortie.dateDebut | date('d/m/Y') }}
+                </p>
+
+                <p>
+                    Date limite d'inscription : {{ sortie.dateCloture | date('d/m/Y') }}
+                </p>
+
+                <p>
+                    Nombre d'inscriptions maximales : {{ sortie.nbInscriptionsMax }}
+                </p>
+
+                <p>
+                    Durée : {{ sortie.duree }} jours
+                </p>
+
+                <p>
+                    Image mis en avant : {{ sortie.urlPhoto }} jours
+                </p>
+
+                <p>
+                    Description : {{ sortie.descriptionInfos }} jours
+                </p>
+            </div>
+
+            <!-- colonne 2 -->
+            <div class="col">
+                <p>
+                    Ville organisatrice : {{ app.user.site.nom }}
+                </p>
+
+                <p>
+                    Ville : {{ sortie.lieu.ville.nom }}
+                </p>
+
+                <p>
+                    Lieu : {{ sortie.lieu.nom }}
+                </p>
+
+                <p>
+                    Rue : {{ sortie.lieu.rue }}
+                </p>
+
+                <p>
+                    Longitude : {{ sortie.lieu.longitude }}
+                </p>
+
+                <p>
+                    Latitude : {{ sortie.lieu.latitude }}
+                </p>
+            </div>
+        </div>
+    </div>
 {% endblock %}
