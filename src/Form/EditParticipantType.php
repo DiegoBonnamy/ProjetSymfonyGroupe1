@@ -62,6 +62,7 @@ class EditParticipantType extends AbstractType
                         'mimeTypes' => [
                             'image/png',
                             'image/jpg',
+                            'image/jpeg',
                             'image/gif',
                         ],
                         'mimeTypesMessage' => 'Format incorrect',
