@@ -5,62 +5,59 @@
 {% block body %}
 
     <div class="symfony-form">
+        <h1 class="display-4">{{ sortie.nom }}</h1>
         <div class="row text-white m-5">
             <!-- colonne 1 -->
             <div class="col">
                 <p>
-                    Nom : {{ sortie.nom }}
+                    <span class="fw-bold">Date de la sortie</span> : {{ sortie.dateDebut | date('d/m/Y') }}
                 </p>
 
                 <p>
-                    Date de la sortie : {{ sortie.dateDebut | date('d/m/Y') }}
+                    <span class="fw-bold">Date limite d'inscription</span> : {{ sortie.dateCloture | date('d/m/Y') }}
                 </p>
 
                 <p>
-                    Date limite d'inscription : {{ sortie.dateCloture | date('d/m/Y') }}
+                    <span class="fw-bold">Nombre d'inscriptions maximales</span> : {{ sortie.nbInscriptionsMax }}
                 </p>
 
                 <p>
-                    Nombre d'inscriptions maximales : {{ sortie.nbInscriptionsMax }}
+                    <span class="fw-bold">Durée</span> : {{ sortie.duree }} jours
                 </p>
 
                 <p>
-                    Durée : {{ sortie.duree }} jours
+                    <span class="fw-bold">Image mis en avant</span> : {{ sortie.urlPhoto }} jours
                 </p>
 
                 <p>
-                    Image mis en avant : {{ sortie.urlPhoto }} jours
-                </p>
-
-                <p>
-                    Description : {{ sortie.descriptionInfos }} jours
+                    <span class="fw-bold">Description</span> : {{ sortie.descriptionInfos }} jours
                 </p>
             </div>
 
             <!-- colonne 2 -->
             <div class="col">
                 <p>
-                    Ville organisatrice : {{ app.user.site.nom }}
+                    <span class="fw-bold">Ville organisatrice</span> : {{ sortie.organisateur.site.nom }}
                 </p>
 
                 <p>
-                    Ville : {{ sortie.lieu.ville.nom }}
+                    <span class="fw-bold">Ville</span> : {{ sortie.lieu.ville.nom }}
                 </p>
 
                 <p>
-                    Lieu : {{ sortie.lieu.nom }}
+                    <span class="fw-bold">Lieu</span> : {{ sortie.lieu.nom }}
                 </p>
 
                 <p>
-                    Rue : {{ sortie.lieu.rue }}
+                    <span class="fw-bold">Rue</span> : {{ sortie.lieu.rue }}
                 </p>
 
                 <p>
-                    Longitude : {{ sortie.lieu.longitude }}
+                    <span class="fw-bold">Longitude</span> : {{ sortie.lieu.longitude }}
                 </p>
 
                 <p>
-                    Latitude : {{ sortie.lieu.latitude }}
+                    <span class="fw-bold">Latitude</span> : {{ sortie.lieu.latitude }}
                 </p>
             </div>
         </div>
