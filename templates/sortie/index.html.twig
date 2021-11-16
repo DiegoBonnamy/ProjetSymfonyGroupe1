@@ -103,7 +103,7 @@
                     {% for sortie in sorties %}
                         <tr>
                             <td>
-                                <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="text-dark" style="text-decoration: none;">
+                                <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="text-dark">
                                     {{ sortie.nom }}
                                 </a>
                             </td>
@@ -123,7 +123,7 @@
                             </td>
                             <td>
                                 <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}"
-                                   class="text-dark" style="text-decoration: none;">
+                                   class="text-dark">
                                     {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}
                                 </a>
                             </td>
