@@ -101,8 +101,14 @@ class SortieController extends AbstractController
             if($check4 != null){ $check4 = true; }else{ $check4 = false; }
             $etatTerminee = $etatRepository->findOneBy(['libelle' => "Terminee"]);
 
-            if($dateDebut == ""){ $dateDebut = new \DateTime('1970-01-01'); }
-            if($dateFin == ""){ $dateFin = new \DateTime('2100-01-01'); }
+            if($dateDebut == ""){
+                $dateDebut = new \DateTime('1970-01-01');
+                $dateDebut = $dateDebut->format('Y-m-d');
+            }
+            if($dateFin == ""){
+                $dateFin = new \DateTime('2100-01-01');
+                $dateFin = $dateFin->format('Y-m-d');
+            }
 
             // Application des filtres
             foreach($sorties as $key => $s){
