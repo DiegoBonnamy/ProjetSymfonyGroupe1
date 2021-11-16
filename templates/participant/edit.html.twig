@@ -12,7 +12,11 @@
         <div class="row">
             <!-- Col Photo -->
             <div class="col-lg-4">
-                <img src="{{ app.request.getBaseURL() }}/images/{{participant.photo}}" style="margin-top:50px;width:300px;" />
+                {% if participant.photo != null %}
+                    <img src="{{ app.request.getBaseURL() }}/images/{{participant.photo}}" style="margin-top:50px;width:300px;" />
+                {% else %}
+                    <img src="{{ app.request.getBaseURL() }}/images/profil-vide.jpg" style="margin-top:50px;width:300px;" />
+                {% endif %}
             </div>
 
             <div class="col-lg-8">
