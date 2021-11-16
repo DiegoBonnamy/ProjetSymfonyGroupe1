@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Participant{% endblock %}
+{% block title %}Nouveau participant{% endblock %}
 
 {% block body %}
     <div class="text-center symfony-form">
-        <h1>Mon profil</h1>
+        <h1>Ajouter un nouveau participant</h1>
 
         {{ form_start(form) }}
 
@@ -17,17 +17,17 @@
 
             <div class="col-lg-8">
 
-                <label>Pseudo : </label>
+                <label>Pseudo * : </label>
                 {{ form_widget(form.pseudo) }} <br/>
 
-                <label>Prénom : </label>
+                <label>Prénom * : </label>
                 {{ form_widget(form.prenom) }} <br/>
 
-                <label>Nom : </label>
+                <label>Nom * : </label>
                 {{ form_widget(form.nom) }} <br/>
 
                 <!-- selecteur du site -->
-                <label>Site : </label><br/>
+                <label>Site * : </label><br/>
                 <select class="form-select" name="_sites" id="sites">
                     {% for site in sites %}
                         <option value="{{ site.id }}">{{ site.nom }}</option>
@@ -37,15 +37,16 @@
                 <label>Téléphone : </label>
                 {{ form_widget(form.telephone) }} <br/>
 
-                <label>Email : </label>
+                <label>Email * : </label>
                 {{ form_widget(form.email) }} <br/>
 
-                <label>Mot de passe : </label>
+                <label>Mot de passe * : </label>
                 {{ form_widget(form.plainPassword) }} <br/>
 
                 <!-- Controles -->
                 <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
                 <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
+                <p class="mt-4">* Champs obligatoire</p>
 
             </div>
         </div>

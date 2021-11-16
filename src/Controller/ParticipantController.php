@@ -60,7 +60,7 @@ class ParticipantController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('sortie_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('participant/new.html.twig', [

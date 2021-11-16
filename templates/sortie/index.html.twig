@@ -25,7 +25,8 @@
                     <label>Site : </label>
                     <select name="_site">
                         {% for site in sites %}
-                        <option value="{{ site.id }}" {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
+                            <option value="{{ site.id }}"
+                                    {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
                         {% endfor %}
                     </select>
                     <br/><br/>
