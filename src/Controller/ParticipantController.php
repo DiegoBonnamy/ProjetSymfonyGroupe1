@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Participant;
 use App\Entity\Site;
+use App\Form\EditParticipantType;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
@@ -84,7 +85,7 @@ class ParticipantController extends AbstractController
      */
     public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder): Response
     {
-        $form = $this->createForm(ParticipantType::class, $participant);
+        $form = $this->createForm(EditParticipantType::class, $participant, array('role' => $this->getUser()->getRoles()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

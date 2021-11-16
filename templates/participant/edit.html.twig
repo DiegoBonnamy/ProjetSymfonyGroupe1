@@ -32,10 +32,13 @@
                 <label>Email : </label>
                 {{ form_widget(form.email) }} <br/>
 
-                <label>Saisie du mot de passe : </label>
+                <label>Site : </label>
+                {{ form_widget(form.site.nom) }} <br/>
+
+                <label>Ancien mot de passe : </label>
                 <input class="form-select" type="password" name="_oldPassword" required /><br/>
 
-                <label>Mot de passe : </label>
+                <label>Nouveau mot de passe : </label>
                 {{ form_widget(form.plainPassword) }} <br/>
 
                 <label>Confirmation du mot de passe : </label>
