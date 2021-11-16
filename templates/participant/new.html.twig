@@ -12,7 +12,7 @@
         <div class="row">
             <!-- Col Photo -->
             <div class="col-lg-4">
-                <img src="https://source.unsplash.com/250x200/?people" style="margin-top:50px;"/>
+                <img src="{{ app.request.getBaseURL() }}/images/profil-vide.jpg" style="margin-top:50px;width:300px;" />
             </div>
 
             <div class="col-lg-8">
@@ -48,7 +48,7 @@
 
                 <!-- Controles -->
                 <button class="btn btn-success" style="border-radius:25px;">Enregistrer</button>
-                <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
+                <a href="{{ path('participant_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
                 <p class="mt-4">* Champs obligatoire</p>
 
             </div>

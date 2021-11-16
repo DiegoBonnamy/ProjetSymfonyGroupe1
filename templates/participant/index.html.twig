@@ -12,6 +12,7 @@
                 <tr>
                     <th>Nom</th>
                     <th>Prénom</th>
+                    <th>Actif</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -21,7 +22,16 @@
                         <td>{{ participant.nom }}</td>
                         <td>{{ participant.prenom }}</td>
                         <td>
-                            <a class="btn btn-warning" style="border-radius:25px;"> Désactiver </a>
+                            {% if participant.actif %}
+                                <i class="fas fa-check"></i>
+                            {% endif %}
+                        </td>
+                        <td>
+                        {% if participant.actif %}
+                            <a href="{{ path('participant_desactive', {id : participant.id}) }}" class="btn btn-warning" style="border-radius:25px;"> Désactiver </a>
+                        {% else %}
+                            <a href="{{ path('participant_active', {id : participant.id}) }}" class="btn btn-success" style="border-radius:25px;"> Activer </a>
+                        {% endif %}
                             <a href="{{ path('participant_delete', {id : participant.id}) }}" class="btn btn-danger" style="border-radius:25px;"> Supprimer </a>
                         </td>
                     </tr>

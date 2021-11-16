@@ -197,4 +197,30 @@ class ParticipantController extends AbstractController
 
         return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    /**
+     * @Route("/desactive/{id}", name="participant_desactive", methods={"GET"})
+     */
+    public function desactive(Request $request, Participant $participant): Response
+    {
+        $participant->setActif(false);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    /**
+     * @Route("/active/{id}", name="participant_active", methods={"GET"})
+     */
+    public function active(Request $request, Participant $participant): Response
+    {
+        $participant->setActif(true);
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($participant);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
+    }
 }
