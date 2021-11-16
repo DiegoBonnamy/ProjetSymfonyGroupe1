@@ -46,4 +46,5 @@ security:
         - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/sortie, roles: ROLE_USER }
         - { path: ^/participant, roles: ROLE_USER }
+        - { path: ^/participant/delete, roles: ROLE_ADMIN }
         - { path: ^/ville, roles: ROLE_ADMIN }

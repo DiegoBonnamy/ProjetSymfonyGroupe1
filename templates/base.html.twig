@@ -91,9 +91,9 @@
                             <li class="nav-item">
                                 <a href="{{ path('sortie_index') }}" class="nav-link text-black">Accueil</a>
                             </li>
-                            {% if app.user.roles[0] == "ADMIN" %}
+                            {% if app.user.roles[0] == "ROLE_ADMIN" %}
                                 <li class="nav-item">
-                                    <a href="{{ path('participant_new') }}" class="nav-link text-black">Ajouter un participant</a>
+                                    <a href="{{ path('participant_index') }}" class="nav-link text-black">Gérez les utilisateurs</a>
                                 </li>
                                 <li class="nav-item">
                                     <a href="{{ path('ville_index') }}" class="nav-link text-black">Gérez les villes</a>

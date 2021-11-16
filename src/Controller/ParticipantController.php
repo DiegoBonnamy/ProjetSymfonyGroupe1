@@ -187,15 +187,13 @@ class ParticipantController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="participant_delete", methods={"POST"})
+     * @Route("/delete/{id}", name="participant_delete", methods={"GET"})
      */
     public function delete(Request $request, Participant $participant): Response
     {
-        if ($this->isCsrfTokenValid('delete' . $participant->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($participant);
-            $entityManager->flush();
-        }
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->remove($participant);
+        $entityManager->flush();
 
         return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
     }
