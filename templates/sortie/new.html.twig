@@ -81,10 +81,10 @@
                     <br/>
 
                     <label>Nom du lieu * : </label><br/>
-                    <input type="text" name="_nomLieu" class="form-control" required /><br/>
+                    <input type="text" name="_nomLieu" class="form-control"/><br/>
 
                     <label>Rue * : </label><br/>
-                    <input type="text" name="_rueLieu" class="form-control" required /><br/>
+                    <input type="text" name="_rueLieu" class="form-control"/><br/>
 
                     <label>Longitude : </label><br/>
                     <input type="text" name="_longitudeLieu" class="form-control" /><br/>
@@ -105,7 +105,8 @@
         {% endif %}
 
         <!-- Controles -->
-        <button class="btn btn-success" style="border-radius:25px;">Publier la sortie</button>
+        <button class="btn btn-success" style="border-radius:25px;">Publier</button>
+        <a href="{{ path('sortie_index') }}" class="btn btn-secondary" style="border-radius:25px;">Enregistrer en brouillon</a>
         <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
 
         <p style="margin-top:20px;">(*) Champs obligatoires</p>
