@@ -5,7 +5,11 @@
 {% block body %}
     <form method="post" class="symfony-form">
         {% if error %}
-            <div class="alert alert-danger"> Authentification incorrecte </div>
+            {% if error.message == 'Votre compte est désactivé.' %}
+                <div class="alert alert-danger">{{ error.message }}</div>
+            {% else %}
+                <div class="alert alert-danger">Authentification incorrecte</div>
+            {% endif %}
         {% endif %}
 
         <label for="inputEmail">Identifiant</label>
