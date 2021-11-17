@@ -170,6 +170,8 @@ class SortieController extends AbstractController
 
     /**
      * @Route("/new", name="sortie_new", methods={"GET","POST"})
+     *
+     * Permet de créer une sortie avec l'état "Ouvert" (et non modifiable)
      */
     public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, Request $request): Response
     {
@@ -180,6 +182,107 @@ class SortieController extends AbstractController
 
         $etat = $etatRepository->findOneBy(
             ['libelle' => "Ouvert"]
+        );
+        $sortie->setEtat($etat);
+
+        $form = $this->createForm(SortieType::class, $sortie);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+
+            // Récupération du lieu
+            $lieuId = $request->request->get('_lieux');
+            $lieu = $lieuRepository->findOneBy(
+                ['id' => $lieuId]
+            );
+            $sortie->setLieu($lieu);
+
+            //Champs du formulaire à tester
+            $dateSortie = $form["dateDebut"]->getData();
+            $dateLimiteInscription = $form["dateCloture"]->getData();
+            $duree = $form["duree"]->getData();
+            $nbInscriptionsMax = $form["nbInscriptionsMax"]->getData();
+
+            //Validation de la durée de la sortie
+            if ($duree < 1 && ($duree != null || $duree == 0)) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La durée de la sortie ne peut être inférieur à 1 jour",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Validation du nombre d'inscriptions max de la sortie
+            if ($nbInscriptionsMax < 2) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "Le nombre d'inscriptions maximum ne peut être inférieur à 2",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Validation de la date de sortie
+            if ($dateSortie < new \DateTime()) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de la sortie ne doit pas être antérieur à aujourd'hui",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Validation de la date limite d'inscription
+            if ($dateLimiteInscription < new \DateTime()) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date limite d'inscription ne doit pas être antérieur à aujourd'hui",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            //Contrôle cohérence des dates
+            if ($dateLimiteInscription > $dateSortie) {
+                return $this->renderForm('sortie/new.html.twig', [
+                    'error_message' => "La date de limite d'inscription doit être antérieur à la date de la sortie",
+                    'villes' => $villeRepository->findAll(),
+                    'sortie' => $sortie,
+                    'form' => $form,
+                ]);
+            }
+
+            // Mise en base de la sortie
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($sortie);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('sortie_index');
+        }
+
+        return $this->renderForm('sortie/new.html.twig', [
+            'error_message' => null,
+            'villes' => $villeRepository->findAll(),
+            'sortie' => $sortie,
+            'form' => $form,
+        ]);
+    }
+
+    /**
+     * @Route("/save", name="sortie_save", methods={"GET","POST"})
+     *
+     * Permet de créer une sortie avec l'état "En création" (et modifiable)
+     */
+    public function save(VilleRepository $villeRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, Request $request): Response
+    {
+        $sortie = new Sortie();
+        $participant = $this->getUser();
+
+        $sortie->setOrganisateur($participant);
+
+        $etat = $etatRepository->findOneBy(
+            ['libelle' => "En creation"]
         );
         $sortie->setEtat($etat);
 
