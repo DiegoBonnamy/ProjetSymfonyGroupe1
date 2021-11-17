@@ -43,7 +43,7 @@
                             <input type="text" name="_nom" placeholder="Nom de la ville" required />
                         </td>
                         <td>
-                            <input type="number" name="_cp" placeholder="00000" required />
+                            <input type="text" name="_cp" placeholder="00000" required />
                         </td>
                         <td>
                             <input type="submit" name="_submit" value="Ajouter" class="btn btn-success" style="border-radius:25px;" />
@@ -52,6 +52,12 @@
                 </tr>
             </tbody>
         </table>
+
+        {% if error_message != null %}
+            <div class="alert alert-danger" role="alert">
+                {{ error_message }}
+            </div><br/>
+        {% endif %}
     </div>
 
     <script>

@@ -20,6 +20,7 @@ class VilleController extends AbstractController
      */
     public function index(Request $request, VilleRepository $villeRepository): Response
     {
+        $error_message = null;
 
         // ADD
         $formSubmit = $request->request->get('_submit');
@@ -28,13 +29,18 @@ class VilleController extends AbstractController
             $nom = $request->request->get('_nom');
             $cp = $request->request->get('_cp');
 
-            $ville = new Ville();
-            $ville->setNom($nom);
-            $ville->setCodePostal($cp);
+            if(strlen($nom) > 0 && strlen($cp) > 0 && ctype_digit($cp)){
+                $ville = new Ville();
+                $ville->setNom($nom);
+                $ville->setCodePostal($cp);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($ville);
-            $entityManager->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($ville);
+                $entityManager->flush();
+            }
+            else{
+                $error_message = "Erreur de saisie";
+            }
         }
 
         // EDIT
@@ -45,20 +51,26 @@ class VilleController extends AbstractController
             $nom = $request->request->get('_nom');
             $cp = $request->request->get('_cp');
 
-            $ville = $villeRepository->findOneBy(
-                ['id' => $id]
-            );
+            if(strlen($nom) > 0 && strlen($cp) > 0 && ctype_digit($cp)){
+                $ville = $villeRepository->findOneBy(
+                    ['id' => $id]
+                );
 
-            $ville->setNom($nom);
-            $ville->setCodePostal($cp);
+                $ville->setNom($nom);
+                $ville->setCodePostal($cp);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($ville);
-            $entityManager->flush();
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($ville);
+                $entityManager->flush();
+            }
+            else{
+                $error_message = "Erreur de saisie";
+            }
         }
 
         return $this->render('ville/index.html.twig', [
             'villes' => $villeRepository->findAll(),
+            'error_message' => $error_message
         ]);
     }
 
