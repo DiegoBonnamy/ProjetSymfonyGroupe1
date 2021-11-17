@@ -18,7 +18,7 @@ class EditParticipantType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        if ($options['role'][0] != 'ADMIN') {
+        if ($options['role'][0] != 'ROLE_ADMIN') {
             $builder
                 ->add('nom', TextType::class, ['attr' => ['disabled' => 'disabled']])
                 ->add('prenom', TextType::class, ['attr' => ['disabled' => 'disabled']]);
@@ -51,7 +51,6 @@ class EditParticipantType extends AbstractType
             ])
             ->add('pseudo', TextType::class)
             ->add('telephone')
-            ->add('site', SiteType::class, array('role' => $options['role']))
             ->add('photo', FileType::class, [
                 'label' => 'Photo de profil',
                 'mapped' => false,
@@ -76,7 +75,7 @@ class EditParticipantType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Participant::class,
-            'role' => null
+            'role' => null,
         ]);
     }
 }
