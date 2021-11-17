@@ -157,7 +157,7 @@
 
                                     <!-- Si la sortie est en création -->
                                     {% if sortie.etat.libelle == "En creation" %}
-                                        <input type="submit" name="_publierDirectement" value=" Publier " class="btn btn-success" style="border-radius:25px;" />
+                                        <input type="submit" name="_publierDepuisIndex" value=" Publier " class="btn btn-success" style="border-radius:25px;" />
                                         <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}/edit" class="btn btn-secondary" style="border-radius:25px;"> Modifier </a>
                                     {% endif %}
 

@@ -43,12 +43,14 @@ class SortieRepository extends ServiceEntityRepository
     /**
     * @return Sortie[] Returns an array of Sortie objects
     */
-    public function findActual($etatOuvert, $etatEnCours)
+    public function findActual($etatOuvert, $etatEnCours, $etatEnCreation, $etatAnnulee)
     {
         return $this->createQueryBuilder('s')
-            ->andWhere('s.etat = :etatOuvert OR s.etat = :etatEnCours')
+            ->andWhere('s.etat = :etatOuvert OR s.etat = :etatEnCours OR s.etat = :etatEnCreation OR s.etat = :etatAnnulee')
             ->setParameter('etatOuvert', $etatOuvert)
             ->setParameter('etatEnCours', $etatEnCours)
+            ->setParameter('etatEnCreation', $etatEnCreation)
+            ->setParameter('etatAnnulee', $etatAnnulee)
             ->orderBy('s.id', 'ASC')
             ->getQuery()
             ->getResult()
