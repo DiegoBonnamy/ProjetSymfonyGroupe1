@@ -232,12 +232,9 @@ class SortieController extends AbstractController
 
             // GESTION DES ETATS
             $publierSortie = $request->request->get('_publier');
-            $publierSortieDepuisIndex = $request->request->get('_publierDepuisIndex');
             $saveSortie = $request->request->get('_save');
 
-            dump('test');
-
-            if ($publierSortie || $publierSortieDepuisIndex) {
+            if ($publierSortie) {
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "Ouvert"]
                 );
@@ -246,19 +243,8 @@ class SortieController extends AbstractController
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "En creation"]
                 );
-
             }
-            dump($etat);
             $sortie->setEtat($etat);
-
-            if ($publierSortieDepuisIndex) {
-                return $this->renderForm('sortie/new.html.twig', [
-                    'error_message' => null,
-                    'villes' => $villeRepository->findAll(),
-                    'sortie' => $sortie,
-                    'form' => $form,
-                ]);
-            }
 
             // GESTION DES LIEUX
             // Test si c'est un nouveau lieu
@@ -382,6 +368,27 @@ class SortieController extends AbstractController
             'sortie' => $sortie,
             'form' => $form,
         ]);
+    }
+
+    /**
+     * @Route("/{id}/publier", name="sortie_publier", methods={"GET"})
+     *
+     * Permet de publier une sortie (Passe l'état "En création" -> "Ouvert")
+     */
+    public function publier(Sortie $sortie, EtatRepository $etatRepository): Response
+    {
+        //On met l'état à "Ouvert"
+        $etat = $etatRepository->findOneBy(
+            ['libelle' => "Ouvert"]
+        );
+        $sortie->setEtat($etat);
+
+        // Mise en base de la sortie
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($sortie);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('sortie_index');
     }
 
     /**

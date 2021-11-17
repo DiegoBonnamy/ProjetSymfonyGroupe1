@@ -127,16 +127,15 @@
                                 <!-- ACTIONS -->
                                 <!-- Si l'utilisateur n'est pas l'organisateur de cette sortie -->
                                 {% if sortie.organisateur.id != app.user.id %}
+                                    <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Afficher </a>
 
                                     <!-- Si la sortie est ouverte -->
                                     {% if sortie.etat.libelle == "Ouvert" %}
                                         <!-- Alors je peux m'inscrire -->
                                         {% if app.user in sortie.participants %}
-                                            <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Afficher </a>
                                             <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}" class="btn btn-secondary" style="border-radius:25px;"> Se désinscrire </a>
                                          <!-- Ou me désinscrire -->
                                         {% else %}
-                                            <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Afficher </a>
                                             <a href="{{ app.request.getBaseURL() }}/sortie/register/{{ sortie.id }}" class="btn btn-success" style="border-radius:25px;"> S'inscrire </a>
                                         {% endif %}
                                     {% endif %}
@@ -151,15 +150,19 @@
                                 <!-- Si l'utilisateur est l'organisateur de cette sortie -->
                                 {% else %}
 
+                                    <!-- Si la sortie n'est pas en création, on peut l'afficher -->
+                                    {% if sortie.etat.libelle != "En creation" %}
+                                        <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Afficher </a>
+                                    {% endif %}
+
                                     <!-- Si la sortie est ouverte -->
                                     {% if sortie.etat.libelle == "Ouvert" %}
-                                        <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Afficher </a>
                                         <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}" class="btn btn-danger" style="border-radius:25px;"> Annuler </a>
                                     {% endif %}
 
                                     <!-- Si la sortie est en création -->
                                     {% if sortie.etat.libelle == "En creation" %}
-                                        <input type="submit" name="_publierDepuisIndex" value=" Publier " class="btn btn-success" style="border-radius:25px;" />
+                                        <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}/publier" class="btn btn-success" style="border-radius:25px;"> Publier </a>
                                         <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}/edit" class="btn btn-secondary" style="border-radius:25px;"> Modifier </a>
                                     {% endif %}
 
