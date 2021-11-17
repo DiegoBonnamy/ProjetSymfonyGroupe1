@@ -105,12 +105,11 @@
         {% endif %}
 
         <!-- Controles -->
-        <button class="btn btn-success" style="border-radius:25px;">Publier</button>
-        <a href="{{ path('sortie_index') }}" class="btn btn-secondary" style="border-radius:25px;">Enregistrer en brouillon</a>
+        <input type="submit" name="_publier" value="Publier" class="btn btn-success" style="border-radius:25px;" />
+        <input type="submit" name="_save" value="Enregistrer en brouillon" class="btn btn-secondary" style="border-radius:25px;" />
         <a href="{{ path('sortie_index') }}" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
 
         <p style="margin-top:20px;">(*) Champs obligatoires</p>
-
         {{ form_end(form) }}
     </div>
 
