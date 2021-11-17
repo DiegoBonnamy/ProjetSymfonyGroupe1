@@ -3,5 +3,54 @@
 {% block title %}Participant{% endblock %}
 
 {% block body %}
-    
+    <div class="symfony-form">
+
+        <div class="row">
+            <div class="col">
+                <h1>Participant</h1>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="col-lg-4">
+                {% if participant.photo != null %}
+                    <img src="{{ app.request.getBaseURL() }}/images/{{participant.photo}}" style="margin-top:50px;width:300px;" />
+                {% else %}
+                    <img src="{{ app.request.getBaseURL() }}/images/profil-vide.jpg" style="margin-top:50px;width:300px;" />
+                {% endif %}
+            </div>
+
+            <div class="col-lg-8">
+                <p>
+                    Pseudo : {{ participant.pseudo }}
+                </p>
+
+                <p>
+                    Nom : {{ participant.nom }}
+                </p>
+
+                <p>
+                    Prenom : {{ participant.prenom }}
+                </p>
+
+                <!--
+                <p>
+                    Telephone : {{ participant.telephone }}
+                </p>
+                <p>
+                    Mail : {{ participant.email }}
+                </p>
+                -->
+            </div>
+
+        </div>
+
+        <div class="row text-center">
+            <div class="col">
+                <a href="{{ path('sortie_index') }}" class="btn btn-black text-white text-center" style="border-radius:25px;background-color:black;">Retour</a>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
