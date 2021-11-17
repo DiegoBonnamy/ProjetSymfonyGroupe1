@@ -328,11 +328,47 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Récupération du lieu
-            $lieuId = $request->request->get('_lieux');
-            $lieu = $lieuRepository->findOneBy(
-                ['id' => $lieuId]
-            );
-            $sortie->setLieu($lieu);
+
+            // Test si c'est un nouveau lieu
+            $newLieu = $request->request->get('_nomLieu');
+            if($newLieu){
+                $lieu = new Lieu();
+
+                // Get Datas
+                $nom = $request->request->get('_nomLieu');
+                $rue = $request->request->get('_rueLieu');
+                $longitude = $request->request->get('_longitudeLieu');
+                $latitude = $request->request->get('_latitudeLieu');
+                
+                $lieu->setNom($nom);
+                $lieu->setRue($rue);
+
+                if(strlen($longitude) > 0 && strlen($latitude) > 0){
+                    $lieu->setLongitude(floatval($longitude));
+                    $lieu->setLatitude(floatval($latitude));
+                }
+
+                // Ville
+                $villeId = $request->request->get('_villes');
+                $ville = $villeRepository->findOneBy(
+                    ['id' => $villeId]
+                );
+                $lieu->setVille($ville);
+
+                // Push
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+
+                $sortie->setLieu($lieu);
+            }
+            else{
+                $lieuId = $request->request->get('_lieux');
+                $lieu = $lieuRepository->findOneBy(
+                    ['id' => $lieuId]
+                );
+                $sortie->setLieu($lieu);
+            }
 
             //Champs du formulaire à tester
             $dateSortie = $form["dateDebut"]->getData();
@@ -499,11 +535,47 @@ class SortieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             // Récupération du lieu
-            $lieuId = $request->request->get('_lieux');
-            $lieu = $lieuRepository->findOneBy(
-                ['id' => $lieuId]
-            );
-            $sortie->setLieu($lieu);
+
+            // Test si c'est un nouveau lieu
+            $newLieu = $request->request->get('_nomLieu');
+            if($newLieu){
+                $lieu = new Lieu();
+
+                // Get Datas
+                $nom = $request->request->get('_nomLieu');
+                $rue = $request->request->get('_rueLieu');
+                $longitude = $request->request->get('_longitudeLieu');
+                $latitude = $request->request->get('_latitudeLieu');
+                
+                $lieu->setNom($nom);
+                $lieu->setRue($rue);
+
+                if(strlen($longitude) > 0 && strlen($latitude) > 0){
+                    $lieu->setLongitude(floatval($longitude));
+                    $lieu->setLatitude(floatval($latitude));
+                }
+
+                // Ville
+                $villeId = $request->request->get('_villes');
+                $ville = $villeRepository->findOneBy(
+                    ['id' => $villeId]
+                );
+                $lieu->setVille($ville);
+
+                // Push
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+
+                $sortie->setLieu($lieu);
+            }
+            else{
+                $lieuId = $request->request->get('_lieux');
+                $lieu = $lieuRepository->findOneBy(
+                    ['id' => $lieuId]
+                );
+                $sortie->setLieu($lieu);
+            }
 
             //Champs du formulaire à tester
             $dateSortie = $form["dateDebut"]->getData();
