@@ -65,7 +65,7 @@ body{
     background-color: rgba(176, 176, 132, 0.8);
     color: #000;
     /* display: block; */
-    height: 25vh;
+    /* height: 25vh; */
     /* overflow-y: auto; */
     width: 100%;
 }
