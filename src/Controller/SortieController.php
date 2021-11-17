@@ -37,17 +37,14 @@ class SortieController extends AbstractController
 
         /* TEST CLOTURE */
         foreach ($sorties as $s) {
-            // Si la date de début est égale à aujourd'hui
+            //Gestion des sorties "En cours" (Si c'est aujourd'hui)
             if ($s->getDateDebut() == new \DateTime() &&
                 $s->getEtat()->getLibelle() == "Ouvert") {
 
-                // On met la sortie en "En cours"
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "En cours"]
                 );
                 $s->setEtat($etat);
-
-                // Push
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($s);
                 $entityManager->flush();
@@ -57,29 +54,55 @@ class SortieController extends AbstractController
             if ($duree == null) {
                 $duree = 1;
             }
-            // Si la date de début est passée
+
+            //Gestion des sorties "Ferme" -> "Ouverte" (Date de cloture non passée et inscriptions incomplètes)
+            if ($s->getDateCloture()->add(new \DateInterval('P' . $duree . 'D')) > new \DateTime() &&
+                $s->getParticipants()->count() < $s->getNbInscriptionsMax() &&
+                $s->getEtat()->getLibelle() == "Ferme") {
+
+                $etat = $etatRepository->findOneBy(
+                    ['libelle' => "Ouvert"]
+                );
+                $s->setEtat($etat);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($s);
+                $entityManager->flush();
+            }
+
+            //Gestion des sorties "Ouvert" -> "Ferme" (Date de cloture passée OU inscriptions complètes)
+            if (($s->getDateCloture()->add(new \DateInterval('P' . $duree . 'D')) < new \DateTime() || $s->getParticipants()->count() >= $s->getNbInscriptionsMax()) &&
+                $s->getEtat()->getLibelle() == "Ouvert") {
+
+                $etat = $etatRepository->findOneBy(
+                    ['libelle' => "Ferme"]
+                );
+                $s->setEtat($etat);
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($s);
+                $entityManager->flush();
+            }
+
+            //Gestion des sorties "Terminée" (Date passée)
             if ($s->getDateCloture()->add(new \DateInterval('P' . $duree . 'D')) < new \DateTime() &&
                 $s->getEtat()->getLibelle() != "Annulee") {
 
-                // On met la sortie en Terminée
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "Terminee"]
                 );
                 $s->setEtat($etat);
-
-                // Push
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($s);
                 $entityManager->flush();
             }
         }
 
-        // On affiche seulement les sorties Ouverte, En cours, En création et Annulee
+        // On affiche seulement les sorties Ouverte, En cours, En création, Annulee et Ferme
         $etatOuvert = $etatRepository->findOneBy(['libelle' => "Ouvert"]);
         $etatEnCours = $etatRepository->findOneBy(['libelle' => "En cours"]);
         $etatEnCreation = $etatRepository->findOneBy(['libelle' => "En creation"]);
         $etatAnnulee = $etatRepository->findOneBy(['libelle' => "Annulee"]);
-        $sorties = $sortieRepository->findActual($etatOuvert->getId(), $etatEnCours->getId(), $etatEnCreation->getId(), $etatAnnulee->getId());
+        $etatFerme = $etatRepository->findOneBy(['libelle' => "Ferme"]);
+        $sorties = $sortieRepository->findActual($etatOuvert->getId(), $etatEnCours->getId(), $etatEnCreation->getId(), $etatAnnulee->getId(), $etatFerme->getId());
 
         /* FILTRES DE RECHERCHE */
         $formSubmit = $request->request->get('_submit');
@@ -165,8 +188,7 @@ class SortieController extends AbstractController
                     if ($s->getEtat()->getId() != $etatTerminee->getId()) {
                         unset($sorties[$key]);
                     }
-                }
-                else{
+                } else {
                     // On affiche pas les sorties Terminées
                     if ($s->getEtat()->getId() == $etatTerminee->getId()) {
                         unset($sorties[$key]);
@@ -463,7 +485,7 @@ class SortieController extends AbstractController
         $participant = $this->getUser();
         if ($participant->getId() != $sortie->getOrganisateur()->getId() &&
             $participant->testEstInscrit($sortie) &&
-            $sortie->getEtat()->getLibelle() == "Ouvert") {
+            ($sortie->getEtat()->getLibelle() == "Ouvert" || $sortie->getEtat()->getLibelle() == "Ferme")) {
 
             $sortie->removeParticipant($participant);
 
