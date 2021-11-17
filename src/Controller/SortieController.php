@@ -236,13 +236,24 @@ class SortieController extends AbstractController
             // Test si c'est un nouveau lieu
             $newLieu = $request->request->get('_nomLieu');
             if ($newLieu) {
-                $lieu = new Lieu();
 
                 // Get Datas
                 $nom = $request->request->get('_nomLieu');
                 $rue = $request->request->get('_rueLieu');
                 $longitude = $request->request->get('_longitudeLieu');
                 $latitude = $request->request->get('_latitudeLieu');
+
+                //Validation du lieu
+                if (strlen($nom) == 0 || strlen($rue) == 0) {
+                    return $this->renderForm('sortie/new.html.twig', [
+                        'error_message' => "Lieu incorrect",
+                        'villes' => $villeRepository->findAll(),
+                        'sortie' => $sortie,
+                        'form' => $form,
+                    ]);
+                }
+
+                $lieu = new Lieu();
 
                 $lieu->setNom($nom);
                 $lieu->setRue($rue);
