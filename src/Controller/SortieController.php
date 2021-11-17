@@ -28,66 +28,91 @@ class SortieController extends AbstractController
      */
     public function index(Request $request, SortieRepository $sortieRepository, EtatRepository $etatRepository, SiteRepository $sitesRepository): Response
     {
+        // Récupération d'un éventuel message dans le GET
         $msg = $request->query->get('msg');
+
+        // Récupération des sorties et des sites
         $sorties = $sortieRepository->findAll();
         $sites = $sitesRepository->findAll();
 
-        /* Test cloture */
+        /* TEST CLOTURE */
         foreach ($sorties as $s) {
+            // Si la date de début est égale à aujourd'hui
             if ($s->getDateDebut() == new \DateTime() &&
                 $s->getEtat()->getLibelle() == "Ouvert") {
 
+                // On met la sortie en "En cours"
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "En cours"]
                 );
                 $s->setEtat($etat);
 
+                // Push
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($s);
                 $entityManager->flush();
             }
+            // Récupération de la durée, si elle est vide on la met par défaut à 1j
             $duree = $s->getDuree();
             if ($duree == null) {
                 $duree = 1;
             }
+            // Si la date de début est passée
             if ($s->getDateCloture()->add(new \DateInterval('P' . $duree . 'D')) < new \DateTime() &&
                 $s->getEtat()->getLibelle() != "Annulee") {
 
+                // On met la sortie en Terminée
                 $etat = $etatRepository->findOneBy(
                     ['libelle' => "Terminee"]
                 );
                 $s->setEtat($etat);
 
+                // Push
                 $entityManager = $this->getDoctrine()->getManager();
                 $entityManager->persist($s);
                 $entityManager->flush();
             }
         }
 
-        // On affiche seulement les sorties Ouverte ou en cours
+        // On affiche seulement les sorties Ouverte, En cours, En création et Annulee
         $etatOuvert = $etatRepository->findOneBy(['libelle' => "Ouvert"]);
         $etatEnCours = $etatRepository->findOneBy(['libelle' => "En cours"]);
         $etatEnCreation = $etatRepository->findOneBy(['libelle' => "En creation"]);
         $etatAnnulee = $etatRepository->findOneBy(['libelle' => "Annulee"]);
         $sorties = $sortieRepository->findActual($etatOuvert->getId(), $etatEnCours->getId(), $etatEnCreation->getId(), $etatAnnulee->getId());
 
-        // Filtre de recherche
+        /* FILTRES DE RECHERCHE */
         $formSubmit = $request->request->get('_submit');
         if ($formSubmit) {
 
+            // Récupération de l'utilisateur connecté
             $user = $this->getUser();
 
+            // Récupération des champs de saisie
             $site = $request->request->get('_site');
             $search = $request->request->get('_search');
             $dateDebut = $request->request->get('_dateDebut');
             $dateFin = $request->request->get('_dateFin');
 
+            // Si les dates sont null, on leu met une valeur par défaut
+            if ($dateDebut == "") {
+                $dateDebut = new \DateTime('1970-01-01');
+                $dateDebut = $dateDebut->format('Y-m-d');
+            }
+            if ($dateFin == "") {
+                $dateFin = new \DateTime('2100-01-01');
+                $dateFin = $dateFin->format('Y-m-d');
+            }
+
+            // Lancement de la recherche
             $sorties = $sortieRepository->findByFilters(
                 $site,
                 $search,
                 $dateDebut,
                 $dateFin
             );
+
+            /* APPLIATION DES CHECKBOX SUR LE RESULTAT */
 
             // Sorties dont je suis l'organisateur
             $check1 = $request->request->get('_check1');
@@ -119,15 +144,6 @@ class SortieController extends AbstractController
             }
             $etatTerminee = $etatRepository->findOneBy(['libelle' => "Terminee"]);
 
-            if ($dateDebut == "") {
-                $dateDebut = new \DateTime('1970-01-01');
-                $dateDebut = $dateDebut->format('Y-m-d');
-            }
-            if ($dateFin == "") {
-                $dateFin = new \DateTime('2100-01-01');
-                $dateFin = $dateFin->format('Y-m-d');
-            }
-
             // Application des filtres
             foreach ($sorties as $key => $s) {
                 if ($check1) {
@@ -152,6 +168,7 @@ class SortieController extends AbstractController
                 }
             }
         } else {
+            // On set les valeurs vide si aucune recherche n'a été faite
             $site = "";
             $search = "";
             $dateDebut = "";
@@ -162,12 +179,14 @@ class SortieController extends AbstractController
             $check4 = false;
         }
 
+        // Test si il y a des sorties
         if (count($sorties) == 0) {
             $warning = "Aucune sortie ne correspond aux filtres";
         } else {
             $warning = null;
         }
 
+        // On envoi le tout à la vue
         return $this->render('sortie/index.html.twig', [
             'sorties' => $sorties,
             'sites' => $sites,
@@ -199,10 +218,13 @@ class SortieController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //GESTION DE L'ORGANISATEUR
+            // GESTION DE L'ORGANISATEUR
             $sortie->setOrganisateur($participant);
 
-            //GESTION DES ETATS
+            // SET DU SITE
+            $sortie->setSite($this->getUser()->getSite());
+
+            // GESTION DES ETATS
             $publierSortie = $request->request->get('_publier');
             $publierSortieDepuisIndex = $request->request->get('_publierDepuisIndex');
             $saveSortie = $request->request->get('_save');
@@ -284,13 +306,13 @@ class SortieController extends AbstractController
                 $sortie->setLieu($lieu);
             }
 
-            //Champs du formulaire à tester
+            // Champs du formulaire à tester
             $dateSortie = $form["dateDebut"]->getData();
             $dateLimiteInscription = $form["dateCloture"]->getData();
             $duree = $form["duree"]->getData();
             $nbInscriptionsMax = $form["nbInscriptionsMax"]->getData();
 
-            //Validation de la durée de la sortie
+            // Validation de la durée de la sortie
             if ($duree < 1 && ($duree != null || $duree == 0)) {
                 return $this->renderForm('sortie/new.html.twig', [
                     'error_message' => "La durée de la sortie ne peut être inférieur à 1 jour",
@@ -300,7 +322,7 @@ class SortieController extends AbstractController
                 ]);
             }
 
-            //Validation du nombre d'inscriptions max de la sortie
+            // Validation du nombre d'inscriptions max de la sortie
             if ($nbInscriptionsMax < 2) {
                 return $this->renderForm('sortie/new.html.twig', [
                     'error_message' => "Le nombre d'inscriptions maximum ne peut être inférieur à 2",
@@ -310,7 +332,7 @@ class SortieController extends AbstractController
                 ]);
             }
 
-            //Validation de la date de sortie
+            // Validation de la date de sortie
             if ($dateSortie < new \DateTime()) {
                 return $this->renderForm('sortie/new.html.twig', [
                     'error_message' => "La date de la sortie ne doit pas être antérieur à aujourd'hui",
@@ -320,7 +342,7 @@ class SortieController extends AbstractController
                 ]);
             }
 
-            //Validation de la date limite d'inscription
+            // Validation de la date limite d'inscription
             if ($dateLimiteInscription < new \DateTime()) {
                 return $this->renderForm('sortie/new.html.twig', [
                     'error_message' => "La date limite d'inscription ne doit pas être antérieur à aujourd'hui",
@@ -330,7 +352,7 @@ class SortieController extends AbstractController
                 ]);
             }
 
-            //Contrôle cohérence des dates
+            // Contrôle cohérence des dates
             if ($dateLimiteInscription > $dateSortie) {
                 return $this->renderForm('sortie/new.html.twig', [
                     'error_message' => "La date de limite d'inscription doit être antérieur à la date de la sortie",
