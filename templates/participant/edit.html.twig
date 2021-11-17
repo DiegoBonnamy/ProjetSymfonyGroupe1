@@ -57,11 +57,14 @@
                 <label>Saisir le mot de passe * : </label>
                 <input class="form-select" type="password" name="_oldPassword" required /><br/>
 
-                <label>Nouveau mot de passe : </label>
-                {{ form_widget(form.plainPassword) }} <br/>
+                <div style="border: 1px solid white;border-radius:25px;padding:15px;">
+                    <label>Nouveau mot de passe : </label>
+                    {{ form_widget(form.plainPassword) }} <br/>
 
-                <label>Confirmation du mot de passe : </label>
-                <input class="form-select" type="password" name="_confirm" /><br/>
+                    <label>Confirmation du mot de passe : </label>
+                    <input class="form-select" type="password" name="_confirm" />
+                </div>
+                <br/>
 
                 {% if error_message != null %}
                     <div class="alert alert-danger" role="alert">
