@@ -166,6 +166,12 @@ class SortieController extends AbstractController
                         unset($sorties[$key]);
                     }
                 }
+                else{
+                    // On affiche pas les sorties Terminées
+                    if ($s->getEtat()->getId() == $etatTerminee->getId()) {
+                        unset($sorties[$key]);
+                    }
+                }
             }
         } else {
             // On set les valeurs vide si aucune recherche n'a été faite
