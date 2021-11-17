@@ -376,7 +376,8 @@ class SortieController extends AbstractController
             return $this->redirectToRoute('sortie_index');
         }
 
-        if ($this->getUser()->getId() == $sortie->getOrganisateur()->getId() &&
+        // Annulation possible si c'est l'organisateur ou un admin et si la sortie est ouverte
+        if (($this->getUser()->getId() == $sortie->getOrganisateur()->getId() || $this->isGranted('ROLE_ADMIN')) &&
             $sortie->getEtat()->getLibelle() == "Ouvert") {
 
             return $this->render('sortie/annuler.html.twig', [

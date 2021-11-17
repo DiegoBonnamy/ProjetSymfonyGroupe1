@@ -141,9 +141,11 @@
                                         {% endif %}
                                     {% endif %}
 
-                                    <!-- Si l'utilisateur est un admin -->
+                                    <!-- Si l'utilisateur est un admin et la sortie est ouverte -->
                                     {% if is_granted('ROLE_ADMIN') %}
-                                        <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}" class="btn btn-danger" style="border-radius:25px;"> Annuler </a>
+                                        {% if sortie.etat.libelle == "Ouvert" %}
+                                            <a href="{{ app.request.getBaseURL() }}/sortie/cancel/{{ sortie.id }}" class="btn btn-danger" style="border-radius:25px;"> Annuler </a>
+                                        {% endif %}
                                     {% endif %}
 
                                 <!-- Si l'utilisateur est l'organisateur de cette sortie -->
