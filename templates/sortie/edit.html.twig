@@ -43,7 +43,7 @@
                 <label>Ville : </label><br/>
                 <select class="form-select" name="_villes" id="villes" onchange="callApi()">
                     {% for ville in villes %}
-                        <option value="{{ ville.id }}">{{ ville.nom }}</option>
+                        <option value="{{ ville.id }}" {% if ville.id == sortie.lieu.ville.id %}selected{% endif %}>{{ ville.nom }}</option>
                     {% endfor %}
                 </select>
                 <br/>
@@ -79,10 +79,10 @@
                     <br/>
 
                     <label>Nom du lieu * : </label><br/>
-                    <input type="text" name="_nomLieu" class="form-control" required /><br/>
+                    <input type="text" name="_nomLieu" class="form-control" /><br/>
 
                     <label>Rue * : </label><br/>
-                    <input type="text" name="_rueLieu" class="form-control" required /><br/>
+                    <input type="text" name="_rueLieu" class="form-control" /><br/>
 
                     <label>Longitude : </label><br/>
                     <input type="text" name="_longitudeLieu" class="form-control" /><br/>
@@ -134,6 +134,9 @@
                     var element = document.createElement("option");
                     element.textContent = lieu.nom;
                     element.value = lieu.id;
+                    if(lieu.id == {{ sortie.lieu.id }}){
+                        element.selected = true;
+                    }
                     lieux_select.appendChild(element);
                 }
                 afficherInfoLieu()
