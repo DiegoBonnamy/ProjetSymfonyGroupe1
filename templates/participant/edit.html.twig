@@ -40,7 +40,16 @@
                 {{ form_widget(form.photo) }} <br/>
 
                 <label>Site : </label>
-                {{ form_widget(form.site.nom) }} <br/>
+                {% if app.user.roles[0] == "ROLE_ADMIN" %}
+                    <select class="form-select" name="_site">
+                        {% for site in sites %}
+                            <option value="{{ site.id }}" {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
+                        {% endfor %}
+                    </select>
+                {% else %}
+                    <input type="text" id="edit_participant_site" name="edit_participant[site]" disabled class="form-control" value="{{ siteValue }}">
+                {% endif %}
+                <br/>
 
                 <label>Ancien mot de passe : </label>
                 <input class="form-select" type="password" name="_oldPassword" required /><br/>

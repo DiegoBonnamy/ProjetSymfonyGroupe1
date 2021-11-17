@@ -103,8 +103,10 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/{id}/edit", name="participant_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger): Response
+    public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger, SiteRepository $sitesRepository): Response
     {
+        $sites = $sitesRepository->findAll();
+        $site = $this->getUser()->getSite()->getNom();
         $form = $this->createForm(EditParticipantType::class, $participant, array('role' => $this->getUser()->getRoles()));
         $form->handleRequest($request);
 
@@ -132,6 +134,8 @@ class ParticipantController extends AbstractController
                             'success_message' => null,
                             'error_message' => 'Les mots de passe ne correspondent pas',
                             'participant' => $participant,
+                            'sites' => $sites,
+                            'siteValue' => $site,
                             'form' => $form,
                         ]);
                     }
@@ -160,6 +164,8 @@ class ParticipantController extends AbstractController
                     'success_message' => "Profil mis à jour",
                     'error_message' => null,
                     'participant' => $participant,
+                    'sites' => $sites,
+                    'siteValue' => $site,
                     'form' => $form,
                 ]);
             }
@@ -168,6 +174,8 @@ class ParticipantController extends AbstractController
                     'success_message' => null,
                     'error_message' => 'Mot de passe incorrect',
                     'participant' => $participant,
+                    'sites' => $sites,
+                    'siteValue' => $site,
                     'form' => $form,
                 ]);
             }
@@ -178,6 +186,8 @@ class ParticipantController extends AbstractController
                 'success_message' => null,
                 'error_message' => null,
                 'participant' => $participant,
+                'sites' => $sites,
+                'siteValue' => $site,
                 'form' => $form,
             ]);
         }

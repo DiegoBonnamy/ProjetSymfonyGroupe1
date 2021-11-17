@@ -47,7 +47,7 @@ class ParticipantType extends AbstractType
                 'required' => false
             ])
             ->add('photo', FileType::class, [
-                'label' => 'Photo de profil',
+                'label' => 'Photo de profil :',
                 'mapped' => false,
                 'required' => false,
                 'constraints' => [
