@@ -43,14 +43,13 @@
                 {% if app.user.roles[0] == "ROLE_ADMIN" %}
                     <select class="form-select" name="_site">
                         {% for site in sites %}
-                            <option value="{{ site.id }}" {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
+                            <option value="{{ site.id }}" {% if participant.site.id == site.id %}selected{% endif %}>{{ site.nom }}</option>
                         {% endfor %}
                     </select>
                 {% else %}
                     <select class="form-select" name="_site">
                             <option value="{{ participant.site.id }}">{{ participant.site.nom }}</option>
                     </select>
-{#                    <input type="text" id="edit_participant_site" name="edit_participant[site]" disabled class="form-control" value="{{ sites[siteValue].nom }}">#}
                 {% endif %}
                 <br/>
 
