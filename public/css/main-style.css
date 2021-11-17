@@ -26,10 +26,10 @@
     margin-left:2%;
     margin-right:2%;
     color: white;
-    background-color: #cca45c;
+    background-color: #042444;
     border-radius: 25px;
     border: 1px solid #fff;
-    padding: 5px;
+    padding: 10px;
 }
 
 body{
@@ -54,7 +54,7 @@ body{
 
 .symfony-table thead {
     height: 5vh;
-    background-color: rgba(242, 232, 14, 0.8);
+    background-color: rgba(242, 232, 14, 0.9);
     color: #000;
 }
 

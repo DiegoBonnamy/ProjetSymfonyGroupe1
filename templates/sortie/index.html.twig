@@ -22,7 +22,7 @@
                     <div class="row">
 
                         <div class="col" style="text-align:left;">
-                            <h6><b>Filtrer les sorties : </b></h6>
+                            <h5><b>Filtrer les sorties : </b></h5>
                             <br/>
 
                             <label>Site : </label>
@@ -65,14 +65,15 @@
 
                             <input type="checkbox" id="check4" name="_check4" {% if check4 == true %}checked{% endif %}>
                             <label for="check4">Sorties passées</label>
+
+                            <div class="row text-center">
+                                <div class="col">
+                                    <input name="_submit" type="submit" class="btn btn-primary"
+                                        style="border-radius:25px;width:50%;margin-top:2vh;" value="Rechercher">
+                                </div>
+                            </div>
                         </div>
 
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <input name="_submit" type="submit" class="btn btn-lg btn-black text-white glow"
-                                style="background-color:black;border-radius:25px;width:80%;margin-top:1vh;" value="Rechercher">
-                        </div>
                     </div>
                 </div>
             </div>
@@ -91,7 +92,7 @@
 
         <!-- Tableau résultats -->
         <div class="row" style="margin-top:25px;">
-            <div class="col" style="overflow-y:scroll; height:26vh; position:absolute;">
+            <div class="col" style="overflow-y:scroll; height:32vh; position:absolute;">
                 <table class="symfony-table">
                     <thead>
                     <tr>
