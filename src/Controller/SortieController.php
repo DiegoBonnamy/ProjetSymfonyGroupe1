@@ -471,7 +471,7 @@ class SortieController extends AbstractController
             $entityManager->persist($sortie);
             $entityManager->flush();
         }
-        return new RedirectResponse($this->generateUrl('sortie_index') . "?msg=Désnscription%20réussie");
+        return new RedirectResponse($this->generateUrl('sortie_index') . "?msg=Désinscription%20réussie");
     }
 
     /**
