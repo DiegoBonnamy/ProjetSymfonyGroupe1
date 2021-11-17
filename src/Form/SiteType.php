@@ -21,8 +21,6 @@ class SiteType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Site::class,
-            'role' => null,
-            'site' => null
         ]);
     }
 }

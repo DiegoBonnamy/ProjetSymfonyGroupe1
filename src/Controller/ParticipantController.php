@@ -106,7 +106,6 @@ class ParticipantController extends AbstractController
     public function edit(Request $request, Participant $participant, UserPasswordEncoderInterface $passwordEncoder, SluggerInterface $slugger, SiteRepository $sitesRepository): Response
     {
         $sites = $sitesRepository->findAll();
-        $site = $this->getUser()->getSite()->getNom();
         $form = $this->createForm(EditParticipantType::class, $participant, array('role' => $this->getUser()->getRoles()));
         $form->handleRequest($request);
 
@@ -135,7 +134,6 @@ class ParticipantController extends AbstractController
                             'error_message' => 'Les mots de passe ne correspondent pas',
                             'participant' => $participant,
                             'sites' => $sites,
-                            'siteValue' => $site,
                             'form' => $form,
                         ]);
                     }
@@ -165,7 +163,6 @@ class ParticipantController extends AbstractController
                     'error_message' => null,
                     'participant' => $participant,
                     'sites' => $sites,
-                    'siteValue' => $site,
                     'form' => $form,
                 ]);
             }
@@ -175,7 +172,6 @@ class ParticipantController extends AbstractController
                     'error_message' => 'Mot de passe incorrect',
                     'participant' => $participant,
                     'sites' => $sites,
-                    'siteValue' => $site,
                     'form' => $form,
                 ]);
             }
@@ -187,7 +183,6 @@ class ParticipantController extends AbstractController
                 'error_message' => null,
                 'participant' => $participant,
                 'sites' => $sites,
-                'siteValue' => $site,
                 'form' => $form,
             ]);
         }

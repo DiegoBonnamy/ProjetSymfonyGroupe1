@@ -47,11 +47,14 @@
                         {% endfor %}
                     </select>
                 {% else %}
-                    <input type="text" id="edit_participant_site" name="edit_participant[site]" disabled class="form-control" value="{{ siteValue }}">
+                    <select class="form-select" name="_site">
+                            <option value="{{ participant.site.id }}">{{ participant.site.nom }}</option>
+                    </select>
+{#                    <input type="text" id="edit_participant_site" name="edit_participant[site]" disabled class="form-control" value="{{ sites[siteValue].nom }}">#}
                 {% endif %}
                 <br/>
 
-                <label>Ancien mot de passe : </label>
+                <label>Saisir le mot de passe * : </label>
                 <input class="form-select" type="password" name="_oldPassword" required /><br/>
 
                 <label>Nouveau mot de passe : </label>

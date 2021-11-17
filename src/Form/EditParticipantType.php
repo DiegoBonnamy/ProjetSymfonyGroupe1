@@ -20,8 +20,8 @@ class EditParticipantType extends AbstractType
     {
         if ($options['role'][0] != 'ROLE_ADMIN') {
             $builder
-                ->add('nom', TextType::class, ['attr' => ['disabled' => 'disabled']])
-                ->add('prenom', TextType::class, ['attr' => ['disabled' => 'disabled']]);
+                ->add('nom', TextType::class, ['attr' => ['readonly' => 'readonly']])
+                ->add('prenom', TextType::class, ['attr' => ['readonly' => 'readonly']]);
         } else {
             $builder
                 ->add('nom', TextType::class)
