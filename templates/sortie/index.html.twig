@@ -16,59 +16,65 @@
 
         <!-- Filtre -->
         <form method="POST">
-            <div class="row symfony-block" style="margin-top:45px;">
+            <div class="row">
+                <div class="col"></div>
+                <div class="col symfony-block" style="margin-top:45px;">
+                    <div class="row">
 
-                <div class="col" style="text-align:left;">
-                    <h6><b>Filtrer les sorties : </b></h6>
-                    <br/>
+                        <div class="col" style="text-align:left;">
+                            <h6><b>Filtrer les sorties : </b></h6>
+                            <br/>
 
-                    <label>Site : </label>
-                    <select name="_site">
-                        {% for site in sites %}
-                            <option value="{{ site.id }}"
-                                    {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
-                        {% endfor %}
-                    </select>
-                    <br/><br/>
+                            <label>Site : </label>
+                            <select name="_site">
+                                {% for site in sites %}
+                                    <option value="{{ site.id }}"
+                                            {% if siteValue == site.id %}selected{% endif %}>{{ site.nom }}</option>
+                                {% endfor %}
+                            </select>
+                            <br/><br/>
 
-                    <label>Le nom de la sortie contient : </label>
-                    <input name="_search" type="text" placeholder="search" value="{{ searchValue }}"/>
-                    <br/><br/>
+                            <label>Le nom de la sortie contient : </label>
+                            <input name="_search" type="text" placeholder="search" value="{{ searchValue }}"/>
+                            <br/><br/>
 
+                            <div class="row">
+                                <div class="col">
+                                    <label>Entre : </label>
+                                    <input name="_dateDebut" type="date" value="{{ dateDebutValue }}"/>
+                                </div>
+                                <div class="col">
+                                    <label> et : </label>
+                                    <input name="_dateFin" type="date" value="{{ dateFinValue }}"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col" style="text-align:left;">
+                            <input type="checkbox" id="check1" name="_check1" {% if check1 == true %}checked{% endif %}>
+                            <label for="check1">Sorties dont je suis l'organisateur</label>
+                            <br/><br/>
+
+                            <input type="checkbox" id="check2" name="_check2" {% if check2 == true %}checked{% endif %}>
+                            <label for="check2">Sorties auxquelles je suis inscrit</label>
+                            <br/><br/>
+
+                            <input type="checkbox" id="check3" name="_check3" {% if check3 == true %}checked{% endif %}>
+                            <label for="check3">Sorties auxquelles je ne suis pas inscrit</label>
+                            <br/><br/>
+
+                            <input type="checkbox" id="check4" name="_check4" {% if check4 == true %}checked{% endif %}>
+                            <label for="check4">Sorties passées</label>
+                        </div>
+
+                    </div>
                     <div class="row">
                         <div class="col">
-                            <label>Entre : </label>
-                            <input name="_dateDebut" type="date" value="{{ dateDebutValue }}"/>
-                        </div>
-                        <div class="col">
-                            <label> et : </label>
-                            <input name="_dateFin" type="date" value="{{ dateFinValue }}"/>
+                            <input name="_submit" type="submit" class="btn btn-lg btn-black text-white glow"
+                                style="background-color:black;border-radius:25px;width:80%;margin-top:1vh;" value="Rechercher">
                         </div>
                     </div>
                 </div>
-
-                <div class="col" style="text-align:left;">
-                    <input type="checkbox" id="check1" name="_check1" {% if check1 == true %}checked{% endif %}>
-                    <label for="check1">Sorties dont je suis l'organisateur</label>
-                    <br/><br/>
-
-                    <input type="checkbox" id="check2" name="_check2" {% if check2 == true %}checked{% endif %}>
-                    <label for="check2">Sorties auxquelles je suis inscrit</label>
-                    <br/><br/>
-
-                    <input type="checkbox" id="check3" name="_check3" {% if check3 == true %}checked{% endif %}>
-                    <label for="check3">Sorties auxquelles je ne suis pas inscrit</label>
-                    <br/><br/>
-
-                    <input type="checkbox" id="check4" name="_check4" {% if check4 == true %}checked{% endif %}>
-                    <label for="check4">Sorties passées</label>
-                </div>
-
-                <div class="col">
-                    <input name="_submit" type="submit" class="btn btn-lg btn-black text-white"
-                           style="background-color:black;border-radius:25px;margin-top:15%;" value="Rechercher">
-                </div>
-
             </div>
         </form>
 
@@ -85,52 +91,52 @@
 
         <!-- Tableau résultats -->
         <div class="row" style="margin-top:25px;">
-            <div class="col" style="overflow-y:scroll; height:250px;">
-                <table class="table table-striped bg-white">
+            <div class="col" style="overflow-y:scroll; height:25vh;">
+                <table class="symfony-table">
                     <thead>
                     <tr>
-                        <th>Nom de la sortie</th>
-                        <th>Date de la sortie</th>
-                        <th>Clôture des inscriptions</th>
-                        <th>Inscrits / Places</th>
-                        <th>Etat</th>
-                        <th>Inscrit</th>
-                        <th>Organisateur</th>
-                        <th>Actions</th>
+                        <th style="width:20%;">Nom de la sortie</th>
+                        <th style="width:10%;">Date de la sortie</th>
+                        <th style="width:10%;">Clôture des inscriptions</th>
+                        <th style="width:10%;">Inscrits / Places</th>
+                        <th style="width:10%;">Etat</th>
+                        <th style="width:5%;">Inscrit</th>
+                        <th style="width:10%;">Organisateur</th>
+                        <th style="width:25%;">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for sortie in sorties %}
                         <tr>
-                            <td>{{ sortie.nom }}</td>
-                            <td>{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
-                            <td>{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
-                            <td>{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
-                            <td>
+                            <td style="width:20%;">{{ sortie.nom }}</td>
+                            <td style="width:10%;">{{ sortie.dateDebut ? sortie.dateDebut|date('d/m/Y') : '' }}</td>
+                            <td style="width:10%;">{{ sortie.dateCloture ? sortie.dateCloture|date('d/m/Y') : '' }}</td>
+                            <td style="width:10%;">{{ sortie.participants|length }} / {{ sortie.nbInscriptionsMax }}</td>
+                            <td style="width:10%;">
                                 {{ sortie.etat.libelle }}
                                 {% if sortie.etat.libelle == "Annulee" %}
                                     <i class="fas fa-info-circle" title="{{ sortie.getMotifAnnulation() }}"></i>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td style="width:5%;">
                                 {% if app.user in sortie.participants %}
                                     <i class="fas fa-check"></i>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td style="width:10%;">
                                 <a href="{{ app.request.getBaseURL() }}/participant/{{ sortie.organisateur.id }}"
                                    class="text-dark">
                                     {{ sortie.organisateur.prenom }} {{ sortie.organisateur.nom }}
                                 </a>
                             </td>
-                            <td>
+                            <td style="width:25%;">
                                 <!-- ACTIONS -->
                                 <!-- Si l'utilisateur n'est pas l'organisateur de cette sortie -->
                                 {% if sortie.organisateur.id != app.user.id %}
                                     <a href="{{ app.request.getBaseURL() }}/sortie/{{ sortie.id }}" class="btn btn-info text-white" style="border-radius:25px;"> Afficher </a>
 
                                     <!-- Si la sortie est ouverte -->
-                                    {% if sortie.etat.libelle == "Ouvert" %}
+                                    {% if (sortie.etat.libelle == "Ouvert" or sortie.etat.libelle == "Ferme") %}
                                         <!-- Alors je peux m'inscrire -->
                                         {% if app.user in sortie.participants %}
                                             <a href="{{ app.request.getBaseURL() }}/sortie/unsubscribe/{{ sortie.id }}" class="btn btn-primary" style="border-radius:25px;"> Se désinscrire </a>
@@ -187,11 +193,13 @@
         </div>
 
         <div class="row">
-            <div class="col" style="text-align:left;">
+            <div class="col" style="text-align:center;">
                 <a href="{{ path('sortie_new') }}" class="btn btn-primary text-white text-center mt-3"
-                   style="border-radius:25px;">Créer une sortie</a>
+                   style="border-radius:25px;position:absolute;bottom:1vh;left:45%;z-index:10;">Créer une sortie</a>
             </div>
         </div>
+
+        <img src="{{ app.request.getBaseURL() }}/images/undraw_walking_around_-25-f5.svg" class="svg-image" />
 
     </div>
 {% endblock %}

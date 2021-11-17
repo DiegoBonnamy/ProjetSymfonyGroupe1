@@ -1,0 +1,84 @@
+.symfony-form {
+    margin-left:15%;
+    margin-right:15%;
+    margin-top:2%;
+    color: white;
+    background-color: #448cac;
+    border-radius: 25px;
+    border: 5px solid #fff;
+    padding: 20px;
+}
+
+.symfony-index {
+    margin-left:5%;
+    margin-right:5%;
+    margin-top:1%;
+    color: white;
+    background-color: #448cac;
+    border-radius: 25px;
+    border: 5px solid #fff;
+    padding: 10px;
+    height: 80vh;
+    position: relative;
+}
+
+.symfony-block {
+    margin-left:2%;
+    margin-right:2%;
+    color: white;
+    background-color: #cca45c;
+    border-radius: 25px;
+    border: 1px solid #fff;
+    padding: 5px;
+}
+
+body{
+    background-color: #042444;
+    margin-bottom: 100px;
+}
+
+.form-label {
+    color: white;
+}
+
+.navbar {
+    background-color: #fa9c14;
+}
+
+.symfony-table {
+    width: 99%;
+    border-radius: 25px;
+    position: absolute;
+    z-index: 1;
+    left: 1;
+    right: 1;
+}
+
+.symfony-table thead {
+    height: 5vh;
+    background-color: rgba(236, 28, 28, 0.8);
+    width: 100%;
+    /* display: block; */
+}
+
+.symfony-table tbody {
+    background-color: rgba(176, 176, 132, 0.8);
+    color: #000;
+    /* display: block; */
+    height: 25vh;
+    /* overflow-y: auto; */
+    width: 100%;
+}
+
+.symfony-table tbody tr {
+    border-top: 1px dashed black;
+    height: 7vh;
+    width: 100%;
+}
+
+.svg-image {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 0;
+}

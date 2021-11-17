@@ -15,64 +15,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Mochiy+Pop+P+One&display=swap" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet">
 
-        <!-- Style custom -->
-        <style>
-            .html {
-                /*font-family: 'Dancing Script', cursive;*/
-            }
-
-            .symfony-form {
-                margin-left:15%;
-                margin-right:15%;
-                margin-top:2%;
-                color: white;
-                /* background-color: #363636; */
-                background-color: #448cac;
-                border-radius: 25px;
-                border: 5px solid #f2e80e;
-                padding: 20px;
-            }
-
-            .symfony-index {
-                margin-left:5%;
-                margin-right:5%;
-                margin-top:1%;
-                color: white;
-                /* background-color: #363636; */
-                background-color: #448cac;
-                border-radius: 25px;
-                border: 5px solid #f2e80e;
-                padding: 10px;
-                height: 80vh;
-            }
-
-            .symfony-block {
-                margin-left:2%;
-                margin-right:2%;
-                color: white;
-                /* background-color: #363636; */
-                background-color: #cca45c;
-                border-radius: 25px;
-                border: 1px solid #f2e80e;
-                padding: 5px;
-            }
-
-            body{
-                /*background-image: url("https://source.unsplash.com/1920x1080/?color");
-                background-size: cover;*/
-                background-color: #042444;
-                margin-bottom: 100px;
-                /* background-blend-mode: luminosity; */
-            }
-
-            .form-label {
-                color: white;
-            }
-
-            .navbar {
-                background-color: #65c1d5;
-            }
-        </style>
+        <!-- CSS -->
+        <link href="{{ app.request.getBaseURL() }}/css/main-style.css" rel="stylesheet">
 
     </head>
     <body>
