@@ -25,12 +25,26 @@ class SortieRepository extends ServiceEntityRepository
     public function findByFilters($site, $search, $dateDebut, $dateFin)
     {
         $search = "%".$search."%";
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.site = :site')
+        if($site > 0){
+            return $this->createQueryBuilder('s')
+                ->andWhere('s.site = :site')
+                ->andWhere('s.nom LIKE :search')
+                ->andWhere('s.dateDebut >= :dateDebut')
+                ->andWhere('s.dateDebut <= :dateFin')
+                ->setParameter('site', $site)
+                ->setParameter('search', $search)
+                ->setParameter('dateDebut', $dateDebut)
+                ->setParameter('dateFin', $dateFin)
+                ->orderBy('s.id', 'ASC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
+        else{
+            return $this->createQueryBuilder('s')
             ->andWhere('s.nom LIKE :search')
             ->andWhere('s.dateDebut >= :dateDebut')
             ->andWhere('s.dateDebut <= :dateFin')
-            ->setParameter('site', $site)
             ->setParameter('search', $search)
             ->setParameter('dateDebut', $dateDebut)
             ->setParameter('dateFin', $dateFin)
@@ -38,6 +52,7 @@ class SortieRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult()
         ;
+        }
     }
 
     /**
