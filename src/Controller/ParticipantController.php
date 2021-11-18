@@ -8,6 +8,8 @@ use App\Form\EditParticipantType;
 use App\Form\ParticipantType;
 use App\Repository\ParticipantRepository;
 use App\Repository\SiteRepository;
+use App\Repository\EtatRepository;
+use App\Repository\SortieRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -194,10 +196,27 @@ class ParticipantController extends AbstractController
     /**
      * @Route("/delete/{id}", name="participant_delete", methods={"GET"})
      */
-    public function delete(Request $request, Participant $participant): Response
+    public function delete(Request $request, Participant $participant, EtatRepository $etatRepository, SortieRepository $sortieRepository): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
+
+        // Suppression de ses inscriptions
+        foreach($participant->getEstInscrit() as $sortie){
+            $sortie->removeParticipant($participant);
+        }
+
+        // Suppression de ses sorties en tant qu'organisateur
+        $sorties = $sortieRepository->findAll();
+        foreach($sorties as $sortie){
+            if($sortie->getOrganisateur()->getId() == $participant->getId()){
+                $sortie->removeAllParticipant();
+                $entityManager->remove($sortie);
+            }
+        }
+
+        // Suppression du participant
         $entityManager->remove($participant);
+
         $entityManager->flush();
 
         return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
