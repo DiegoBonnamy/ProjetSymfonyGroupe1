@@ -25,7 +25,7 @@
                 <label>Nombre de places * : </label>
                 {{ form_widget(form.nbInscriptionsMax) }} <br/>
 
-                <label>Durée (en jours) : </label>
+                <label>Durée (en jours) * : </label>
                 {{ form_widget(form.duree) }} <br/>
 
                 <label>Image mis en avant :</label>
@@ -57,7 +57,8 @@
                         <select class="form-select" name="_lieux" id="lieux" onchange="afficherInfoLieu()"></select>
                     </div>
                     <div class="col-sm-1">
-                        <a onclick="addLieu()" class="btn btn-success btn-sm" style="border-radius:50%;"><i class="fas fa-plus"></i></a>
+                        <a onclick="addLieu()" class="btn btn-success btn-sm" style="border-radius:50%;"><i
+                                    class="fas fa-plus"></i></a>
                     </div>
                 </div>
 
@@ -87,10 +88,10 @@
                     <input type="text" name="_rueLieu" class="form-control"/><br/>
 
                     <label>Longitude : </label><br/>
-                    <input type="text" name="_longitudeLieu" class="form-control" /><br/>
+                    <input type="text" name="_longitudeLieu" class="form-control"/><br/>
 
                     <label>Latitude : </label><br/>
-                    <input type="text" name="_latitudeLieu" class="form-control" /><br/>
+                    <input type="text" name="_latitudeLieu" class="form-control"/><br/>
 
                     <a onclick="selectLieu()" class="btn btn-danger" style="border-radius:25px;">Annuler</a>
                 </div>
@@ -105,8 +106,9 @@
         {% endif %}
 
         <!-- Controles -->
-        <input type="submit" name="_publier" value="Publier" class="btn btn-success" style="border-radius:25px;" />
-        <input type="submit" name="_save" value="Enregistrer en brouillon" class="btn btn-warning text-white" style="border-radius:25px;" />
+        <input type="submit" name="_publier" value="Publier" class="btn btn-success" style="border-radius:25px;"/>
+        <input type="submit" name="_save" value="Enregistrer en brouillon" class="btn btn-warning text-white"
+               style="border-radius:25px;"/>
         <a href="{{ path('sortie_index') }}" class="btn btn-secondary" style="border-radius:25px;">Retour</a>
 
         <p style="margin-top:20px;">(*) Champs obligatoires</p>
@@ -155,16 +157,29 @@
                 dRue.innerHTML = 'Rue : ' + response.data.rue;
                 dLongitude.innerHTML = 'Longitude : ' + response.data.longitude;
                 dLatitude.innerHTML = 'Latitude : ' + response.data.latitude;
+
+                if (response.data.longitude == null) {
+                    alert('null');
+                    dLongitude.style.display = 'none';
+                } else {
+                    alert('nonnull');
+                    dLongitude.style.display = 'block';
+                }
+                if (response.data.latitude == null) {
+                    dLatitude.style.display = 'none';
+                } else {
+                    dLatitude.style.display = 'block';
+                }
             });
         }
 
-        function addLieu(){
+        function addLieu() {
             document.getElementById("selectLieu").style.display = "none";
             document.getElementById("infosLieu").style.display = "none";
             document.getElementById("addLieu").style.display = "";
         }
 
-        function selectLieu(){
+        function selectLieu() {
             document.getElementById("selectLieu").style.display = "";
             document.getElementById("infosLieu").style.display = "";
             document.getElementById("addLieu").style.display = "none";
