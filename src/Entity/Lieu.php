@@ -155,6 +155,7 @@ class Lieu
     public function removeAllSorties(): self
     {
         foreach($this->getSorties() as $sortie){
+            $sortie->removeAllParticipant();
             $this->removeSorty($sortie);
         }
 

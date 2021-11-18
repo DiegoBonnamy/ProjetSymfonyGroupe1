@@ -254,6 +254,17 @@ class Sortie
         return $this;
     }
 
+    public function removeAllParticipant(): self
+    {
+        foreach($this->participants as $p){
+            if ($this->participants->removeElement($p)) {
+                $p->removeEstInscrit($this);
+            }
+        } 
+
+        return $this;
+    }
+
     public function getMotifAnnulation(): ?string
     {
         return $this->motif_annulation;

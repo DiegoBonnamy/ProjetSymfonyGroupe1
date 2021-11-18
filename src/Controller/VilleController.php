@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Ville;
 use App\Form\VilleType;
 use App\Repository\VilleRepository;
+use App\Repository\LieuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -77,10 +78,22 @@ class VilleController extends AbstractController
     /**
      * @Route("/delete/{id}", name="ville_delete", methods={"GET"})
      */
-    public function delete(Request $request, Ville $ville): Response
+    public function delete(Request $request, Ville $ville, LieuRepository $lieuRepository): Response
     {
         $entityManager = $this->getDoctrine()->getManager();
+
+        // Suppression des lieux associés (cascade sur sortie et inscription)
+        $lieux = $lieuRepository->findAll();
+        foreach($lieux as $lieu){
+            if($lieu->getVille()->getId() == $ville->getId()){
+                $lieu->removeAllSorties();
+                $entityManager->remove($lieu);
+            }
+        }
+
+        // Suppression de la ville
         $entityManager->remove($ville);
+
         $entityManager->flush();
 
         return $this->redirectToRoute('ville_index', [], Response::HTTP_SEE_OTHER);
