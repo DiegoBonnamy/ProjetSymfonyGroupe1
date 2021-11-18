@@ -5,13 +5,17 @@
 {% block body %}
 
     <div class="symfony-form">
-        <h1 class="display-4">{{ sortie.nom }}</h1>
+        {% if sortie.urlPhoto != null %}
+            <div class="row text-center">
+                <div class="col">
+                    <img src="{{ app.request.getBaseURL() }}/images/{{ sortie.urlPhoto }}" style="margin-top:50px;width:200px;"/>
+                </div>
+            </div>
+        {% endif %}
 
-        <div class="row">
+        <div class="row text-center">
             <div class="col">
-                {% if sortie.urlPhoto != null %}
-                    <img src="{{ app.request.getBaseURL() }}/images/{{sortie.urlPhoto}}" style="margin-top:50px;width:200px;" />
-                {% endif %}
+                <h1 class="display-4">{{ sortie.nom }}</h1>
             </div>
         </div>
 
