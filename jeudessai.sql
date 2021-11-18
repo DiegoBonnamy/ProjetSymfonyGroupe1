@@ -46,4 +46,8 @@ INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (3,4);
 INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (2,4);
 INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (1,4);
 
+/* EVENTS */
+CREATE DEFINER=`root`@`localhost` EVENT `archiver_sorties` ON SCHEDULE EVERY 2 HOUR STARTS '2021-11-17 09:50:31' ENDS '2021-11-21 09:50:31' ON COMPLETION PRESERVE ENABLE DO INSERT INTO sortie_archivee (id, lieu_id, organisateur_id, etat_id, nom, date_debut, duree, date_cloture, nb_inscriptions_max, description_infos, url_photo, motif_annulation, site_id) SELECT * FROM sortie WHERE date_debut <= NOW() - INTERVAL 1 MONTH;
+CREATE DEFINER=`root`@`localhost` EVENT `delete_sorties` ON SCHEDULE EVERY 2 HOUR STARTS '2021-11-17 09:52:41' ENDS '2021-11-21 09:52:41' ON COMPLETION PRESERVE ENABLE DO DELETE sortie.* FROM sortie inner join sortie_archivee on sortie.id = sortie_archivee.id;
+
 /* php bin/console security:encode-password */
