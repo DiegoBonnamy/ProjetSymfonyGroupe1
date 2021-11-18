@@ -179,7 +179,7 @@ class ParticipantController extends AbstractController
             }
         }
 
-        if($participant->getId() == $this->getUser()->getId()){
+        if($participant->getId() == $this->getUser()->getId() || $this->isGranted('ROLE_ADMIN')){
             return $this->renderForm('participant/edit.html.twig', [
                 'success_message' => null,
                 'error_message' => null,
@@ -191,6 +191,24 @@ class ParticipantController extends AbstractController
         else{
             return $this->redirectToRoute('participant_index', [], Response::HTTP_SEE_OTHER);
         }
+    }
+
+    /**
+     * @Route("/{id}/admin/edit", name="admin_participant_edit", methods={"GET","POST"})
+     */
+    public function adminEdit(Request $request, SiteRepository $sitesRepository, Participant $participant): Response
+    {
+        $sites = $sitesRepository->findAll();
+        $form = $this->createForm(EditParticipantType::class, $participant, array('role' => $this->getUser()->getRoles()));
+        $form->handleRequest($request);
+
+        return $this->renderForm('participant/edit.html.twig', [
+            'success_message' => null,
+            'error_message' => '',
+            'participant' => $participant,
+            'sites' => $sites,
+            'form' => $form,
+        ]);
     }
 
     /**

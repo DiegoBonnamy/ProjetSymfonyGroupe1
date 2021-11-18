@@ -48,10 +48,12 @@
                             <!-- Si c'est un utilisateur lambda -->
                             {% if user_admin == false %}
                                 {% if participant.actif %}
-                                    <a href="{{ path('participant_desactive', {id : participant.id}) }}" class="btn btn-warning" style="border-radius:25px;"> Désactiver </a>
+                                    <a href="{{ path('participant_desactive', {id : participant.id}) }}" class="btn btn-warning text-white" style="border-radius:25px;"> Désactiver </a>
                                 {% else %}
                                     <a href="{{ path('participant_active', {id : participant.id}) }}" class="btn btn-success" style="border-radius:25px;"> Activer </a>
                                 {% endif %}
+                                <a href="{{ path('participant_edit', {id : participant.id}) }}" class="btn btn-warning text-white" style="border-radius:25px;"> Modifier </a>
+
                                 <a href="{{ path('participant_delete', {id : participant.id}) }}" class="btn btn-danger" style="border-radius:25px;"> Supprimer </a>
                             {% endif %}
                         {% endif %}
