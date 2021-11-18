@@ -3,7 +3,13 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-    <form method="post" class="symfony-form">
+    <form method="post" class="symfony-form" style="position:absolute;z-index:10;width:40%;left:0;right:0;margin-left: auto;margin-right: auto;">
+
+        <div class="text-center">
+            <h1>Authentification</h1>
+        </div>
+        <br/>
+
         {% if error %}
             {% if error.message == 'Votre compte est désactivé.' %}
                 <div class="alert alert-danger">{{ error.message }}</div>
@@ -25,7 +31,13 @@
             </label>
         </div>
 
-        <button class="btn btn-primary" style="border-radius:25px;">Connexion</button>
+        <div class="text-center">
+            <button class="glow-on-hover">Connexion</button>
+        </div>
 
     </form>
+
+    <img src="{{ app.request.getBaseURL() }}/images/undraw_explore_re_8l4v.svg" style="position:absolute;left:0;bottom:0;width:40%;" />
+    <img src="{{ app.request.getBaseURL() }}/images/undraw_adventure_map_hnin.svg" style="position:absolute;right:0;bottom:0;width:40%;" />
+
 {% endblock %}
