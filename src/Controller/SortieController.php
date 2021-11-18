@@ -13,10 +13,12 @@ use App\Repository\SortieRepository;
 use App\Repository\VilleRepository;
 use App\Repository\LieuRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
  * @Route("/sortie")
@@ -236,7 +238,7 @@ class SortieController extends AbstractController
      *
      * Permet de créer une sortie avec l'état "Ouvert" (et non modifiable)
      */
-    public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, Request $request): Response
+    public function new(VilleRepository $villeRepository, EtatRepository $etatRepository, LieuRepository $lieuRepository, Request $request, SluggerInterface $slugger): Response
     {
         $sortie = new Sortie();
         $participant = $this->getUser();
@@ -318,6 +320,24 @@ class SortieController extends AbstractController
                     ['id' => $lieuId]
                 );
                 $sortie->setLieu($lieu);
+            }
+
+            //GESTION DE L'IMAGE
+            $urlPhoto = $form->get('urlPhoto')->getData();
+            if ($urlPhoto) {
+                $originalFilename = pathinfo($urlPhoto->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $urlPhoto->guessExtension();
+
+                try {
+                    $urlPhoto->move(
+                        $this->getParameter('photo_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+
+                }
+                $sortie->setUrlPhoto($newFilename);
             }
 
             // Champs du formulaire à tester
@@ -499,15 +519,32 @@ class SortieController extends AbstractController
     /**
      * @Route("/{id}/edit", name="sortie_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, Sortie $sortie, VilleRepository $villeRepository, LieuRepository $lieuRepository): Response
+    public function edit(Request $request, Sortie $sortie, VilleRepository $villeRepository, LieuRepository $lieuRepository, SluggerInterface $slugger): Response
     {
         $form = $this->createForm(SortieType::class, $sortie);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            // Récupération du lieu
+            //GESTION DE L'IMAGE
+            $urlPhoto = $form->get('urlPhoto')->getData();
+            if ($urlPhoto) {
+                $originalFilename = pathinfo($urlPhoto->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $urlPhoto->guessExtension();
 
+                try {
+                    $urlPhoto->move(
+                        $this->getParameter('photo_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+
+                }
+                $sortie->setPhoto($newFilename);
+            }
+
+            // GESTION DES LIEUX
             // Test si c'est un nouveau lieu
             $newLieu = $request->request->get('_nomLieu');
             if ($newLieu) {

@@ -9,6 +9,11 @@
         <div class="row text-white m-5">
             <!-- colonne 1 -->
             <div class="col">
+
+                {% if sortie.urlPhoto != null %}
+                    <img src="{{ app.request.getBaseURL() }}/images/{{sortie.urlPhoto}}" style="margin-top:50px;width:300px;" />
+                {% endif %}
+
                 <p>
                     <span class="fw-bold">Date de la sortie</span> : {{ sortie.dateDebut | date('d/m/Y') }}
                 </p>
