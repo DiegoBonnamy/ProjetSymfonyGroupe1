@@ -159,10 +159,8 @@
                 dLatitude.innerHTML = 'Latitude : ' + response.data.latitude;
 
                 if (response.data.longitude == null) {
-                    alert('null');
                     dLongitude.style.display = 'none';
                 } else {
-                    alert('nonnull');
                     dLongitude.style.display = 'block';
                 }
                 if (response.data.latitude == null) {
