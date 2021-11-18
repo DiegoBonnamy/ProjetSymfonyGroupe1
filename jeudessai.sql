@@ -20,15 +20,15 @@ INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (1,
 INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (1,"Jardin des Plantes","Rue Stanislas Baudry", 47.218178, -1.541909);
 INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (2,"Cinéma CGR Niort","Place de la Brèche", null, null);
 INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (2,"Musée du Donjon","Rue du Guesclin", null, null);
-INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (3,"Zénith Nantes Métropole","ZAC d'Ar Mor, Bd du Zénith", null, null);
+INSERT INTO `lieu`(`ville_id`, `nom`, `rue`, `latitude`, `longitude`) VALUES (3,"Les Flâneries","Rte de Nantes", null, null);
 
 /* PARTICIPANT */
 INSERT INTO `participant`(`email`, `roles`, `password`, `pseudo`, `nom`, `prenom`, `telephone`, `site_id`, `actif`) 
-    VALUES ("pierre.ladmin",'["ROLE_ADMIN"]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","admin","Ladmin","Pierre","0102030405",1,1);
+    VALUES ("pierre.ladmin@sortir.fr",'["ROLE_ADMIN"]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","admin","Ladmin","Pierre","0102030405",1,1);
 INSERT INTO `participant`(`email`, `roles`, `password`, `pseudo`, `nom`, `prenom`, `telephone`, `site_id`, `actif`) 
-    VALUES ("bernard.lhermite",'[]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","bernard","LHERMITE","Bernard",null,1,1);
+    VALUES ("bernard.lhermite@sortir.fr",'[]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","bernard","LHERMITE","Bernard",null,1,1);
 INSERT INTO `participant`(`email`, `roles`, `password`, `pseudo`, `nom`, `prenom`, `telephone`, `site_id`, `actif`) 
-    VALUES ("alex.terieur",'[]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","alex","Terieur","Alex","0203040506",2,1);
+    VALUES ("alex.terieur@sortir.fr",'[]',"$2y$13$z60xN3leUE4JB6NGUjXMQ.qpOPX0eOnwPC66z46f4kyK6bnMNjnFC","alex","Terieur","Alex","0203040506",2,1);
 
 /* SORTIE */
 INSERT INTO `sortie`(`lieu_id`, `organisateur_id`, `etat_id`, `nom`, `date_debut`, `duree`, `date_cloture`, `nb_inscriptions_max`, `description_infos`, `url_photo`, `motif_annulation`, `site_id`)
@@ -41,8 +41,8 @@ INSERT INTO `sortie`(`lieu_id`, `organisateur_id`, `etat_id`, `nom`, `date_debut
     VALUES (1,3,4,"Conférence base de données","2021-10-15",1,"2021-10-01",10,null,null,null,1);
 
 /* INSCRIPTION */
-INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (3,3);
-INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (3,4);
+INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (3,1);
+INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (3,2);
 INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (2,4);
 INSERT INTO `participant_sortie`(`participant_id`, `sortie_id`) VALUES (1,4);
 
