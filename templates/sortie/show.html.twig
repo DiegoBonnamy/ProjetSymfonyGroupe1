@@ -77,25 +77,33 @@
         </div>
 
         <h2 class="display-5 mt-4">Liste des participants</h2>
-        <table class="table bg-white">
-            <thead>
-            <tr>
-                <th>Pseudo</th>
-                <th>Nom</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for participant in sortie.participants %}
+        <div class="col-lg-5">
+            <table class="table bg-white">
+                <thead>
                 <tr>
-                    <td>{{ participant.pseudo }}</td>
-                    <td>{{ participant.nom }}</td>
+                    <th class="col-lg-2">Photo</th>
+                    <th class="col-lg-4">Pseudo</th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="12">Il n'y a aucun participant inscrit à cette sortie</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                </thead>
+                <tbody>
+                {% for participant in sortie.participants %}
+                    <tr>
+                        <td class="col-lg-2">
+                            {% if participant.photo != null %}
+                                <img src="{{ app.request.getBaseURL() }}/images/{{participant.photo}}" style="height:3vh;" />
+                            {% else %}
+                                <img src="{{ app.request.getBaseURL() }}/images/profil-vide.jpg" style="height:3vh;" />
+                            {% endif %}
+                        </td>
+                        <td class="col-lg-4">{{ participant.pseudo }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="12">Il n'y a aucun participant inscrit à cette sortie</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
 {% endblock %}
