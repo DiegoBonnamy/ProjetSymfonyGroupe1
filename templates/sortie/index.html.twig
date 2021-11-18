@@ -5,6 +5,12 @@
 {% block body %}
     <div class="text-center symfony-index">
 
+        {% if success_message != null %}
+            <div class="alert alert-success" role="alert" style="position:absolute;width:300px;z-index:20;top:10;left:10;">
+                {{ success_message }}
+            </div>
+        {% endif %}
+
         <!-- Date + Nom -->
         <div class="row">
             <div class="col" style="text-align:right;">
@@ -80,20 +86,9 @@
             </div>
         </form>
 
-        {% if success_message != null %}
-            <div class="row" style="margin-top:45px;">
-                <div class="col">
-                    <div class="alert alert-success" role="alert">
-                        {{ success_message }}
-                    </div>
-                </div>
-            </div>
-        {% endif %}
-
-
         <!-- Tableau résultats -->
         <div class="row" style="margin-top:25px;">
-            <div class="col" style="overflow-y:scroll; height:32vh; position:absolute;">
+            <div class="col" style="overflow-y:scroll; height:32vh; position:absolute; bottom:6vh;">
                 <table class="symfony-table">
                     <thead>
                     <tr>

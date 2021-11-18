@@ -54,7 +54,7 @@ body{
 
 .symfony-table thead {
     height: 5vh;
-    background-color: rgba(242, 232, 14, 0.9);
+    background-color: rgba(242, 232, 14, 0.95);
     color: #000;
 }
 
