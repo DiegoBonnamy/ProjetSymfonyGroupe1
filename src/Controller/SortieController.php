@@ -268,77 +268,7 @@ class SortieController extends AbstractController
                     ['libelle' => "En creation"]
                 );
             }
-            $sortie->setEtat($etat);
-
-            // GESTION DES LIEUX
-            // Test si c'est un nouveau lieu
-            $newLieu = $request->request->get('_nomLieu');
-            if ($newLieu) {
-
-                // Get Datas
-                $nom = $request->request->get('_nomLieu');
-                $rue = $request->request->get('_rueLieu');
-                $longitude = $request->request->get('_longitudeLieu');
-                $latitude = $request->request->get('_latitudeLieu');
-
-                //Validation du lieu
-                if (strlen($nom) == 0 || strlen($rue) == 0) {
-                    return $this->renderForm('sortie/new.html.twig', [
-                        'error_message' => "Lieu incorrect",
-                        'villes' => $villeRepository->findAll(),
-                        'sortie' => $sortie,
-                        'form' => $form,
-                    ]);
-                }
-
-                $lieu = new Lieu();
-
-                $lieu->setNom($nom);
-                $lieu->setRue($rue);
-
-                if (strlen($longitude) > 0 && strlen($latitude) > 0) {
-                    $lieu->setLongitude(floatval($longitude));
-                    $lieu->setLatitude(floatval($latitude));
-                }
-
-                // Ville
-                $villeId = $request->request->get('_villes');
-                $ville = $villeRepository->findOneBy(
-                    ['id' => $villeId]
-                );
-                $lieu->setVille($ville);
-
-                // Push
-                $entityManager = $this->getDoctrine()->getManager();
-                $entityManager->persist($lieu);
-                $entityManager->flush();
-
-                $sortie->setLieu($lieu);
-            } else {
-                $lieuId = $request->request->get('_lieux');
-                $lieu = $lieuRepository->findOneBy(
-                    ['id' => $lieuId]
-                );
-                $sortie->setLieu($lieu);
-            }
-
-            //GESTION DE L'IMAGE
-            $urlPhoto = $form->get('urlPhoto')->getData();
-            if ($urlPhoto) {
-                $originalFilename = pathinfo($urlPhoto->getClientOriginalName(), PATHINFO_FILENAME);
-                $safeFilename = $slugger->slug($originalFilename);
-                $newFilename = $safeFilename . '-' . uniqid() . '.' . $urlPhoto->guessExtension();
-
-                try {
-                    $urlPhoto->move(
-                        $this->getParameter('photo_directory'),
-                        $newFilename
-                    );
-                } catch (FileException $e) {
-
-                }
-                $sortie->setUrlPhoto($newFilename);
-            }
+            $sortie->setEtat($etat);           
 
             // Champs du formulaire à tester
             $dateSortie = $form["dateDebut"]->getData();
@@ -394,6 +324,76 @@ class SortieController extends AbstractController
                     'sortie' => $sortie,
                     'form' => $form,
                 ]);
+            }
+
+            //GESTION DE L'IMAGE
+            $urlPhoto = $form->get('urlPhoto')->getData();
+            if ($urlPhoto) {
+                $originalFilename = pathinfo($urlPhoto->getClientOriginalName(), PATHINFO_FILENAME);
+                $safeFilename = $slugger->slug($originalFilename);
+                $newFilename = $safeFilename . '-' . uniqid() . '.' . $urlPhoto->guessExtension();
+
+                try {
+                    $urlPhoto->move(
+                        $this->getParameter('photo_directory'),
+                        $newFilename
+                    );
+                } catch (FileException $e) {
+
+                }
+                $sortie->setUrlPhoto($newFilename);
+            }
+
+            // GESTION DES LIEUX
+            // Test si c'est un nouveau lieu
+            $newLieu = $request->request->get('_nomLieu');
+            if ($newLieu) {
+
+                // Get Datas
+                $nom = $request->request->get('_nomLieu');
+                $rue = $request->request->get('_rueLieu');
+                $longitude = $request->request->get('_longitudeLieu');
+                $latitude = $request->request->get('_latitudeLieu');
+
+                //Validation du lieu
+                if (strlen($nom) == 0 || strlen($rue) == 0) {
+                    return $this->renderForm('sortie/new.html.twig', [
+                        'error_message' => "Lieu incorrect",
+                        'villes' => $villeRepository->findAll(),
+                        'sortie' => $sortie,
+                        'form' => $form,
+                    ]);
+                }
+
+                $lieu = new Lieu();
+
+                $lieu->setNom($nom);
+                $lieu->setRue($rue);
+
+                if (strlen($longitude) > 0 && strlen($latitude) > 0) {
+                    $lieu->setLongitude(floatval($longitude));
+                    $lieu->setLatitude(floatval($latitude));
+                }
+
+                // Ville
+                $villeId = $request->request->get('_villes');
+                $ville = $villeRepository->findOneBy(
+                    ['id' => $villeId]
+                );
+                $lieu->setVille($ville);
+
+                // Push
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($lieu);
+                $entityManager->flush();
+
+                $sortie->setLieu($lieu);
+            } else {
+                $lieuId = $request->request->get('_lieux');
+                $lieu = $lieuRepository->findOneBy(
+                    ['id' => $lieuId]
+                );
+                $sortie->setLieu($lieu);
             }
 
             // Mise en base de la sortie
